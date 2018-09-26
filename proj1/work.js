@@ -1,5 +1,7 @@
 var camera, scene, renderer, chair;
 
+var clock = new THREE.Clock();
+
 //-----------------------------------------------------------------------------------------------------------
 
 function render() {
@@ -232,7 +234,7 @@ function lampCreateArm(obj, x, y, z, rotGlobal, rotHinge) {
 function createChair(x, y, z) {
 	chair = new THREE.Object3D();
 	
-	chair.userData = {movingX: false, movingZ: false, velocityZ: 0, velocityX: 0, accelZ: 25, accelX: 25, factor: 1000};
+	chair.userData = {movingX: false, movingZ: false, velocityZ: 0, velocityX: 0, accelZ: 7, accelX: 7, factor: 1};
 
 	var frame = chairCreateFrame(chair, 0, 50, 0, 6);
 	chairCreateSeat(frame, 0, 0, 0, -Math.PI/12);
@@ -306,15 +308,18 @@ function chairCreateFrame(obj, x, y, z, axesNo) {
 }
 
 function moveChair() {
+
+	var delta = clock.getDelta();
+
 	if (chair.userData.movingZ) {
 		chair.userData.velocityZ += chair.userData.accelZ;
-		chair.position.z += chair.userData.velocityZ/chair.userData.factor;
+		chair.position.z += chair.userData.velocityZ/chair.userData.factor*delta;
 		if (chair.userData.velocityZ == 0)
 			chair.userData.movingZ = false;
 	}
 	if (chair.userData.movingX) {
 		chair.userData.velocityX += chair.userData.accelX;
-		chair.position.x += chair.userData.velocityX/chair.userData.factor;
+		chair.position.x += chair.userData.velocityX/chair.userData.factor*delta;
 		if (chair.userData.velocityX == 0)
 			chair.userData.movingX = false;
 	}
