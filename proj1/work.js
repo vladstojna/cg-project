@@ -313,13 +313,13 @@ function moveChair() {
 
 	if (chair.userData.movingZ) {
 		chair.userData.velocityZ += chair.userData.accelZ;
-		chair.position.z += chair.userData.velocityZ/chair.userData.factor*delta;
+		chair.position.z += chair.userData.velocityZ/chair.userData.factor * delta;
 		if (chair.userData.velocityZ == 0)
 			chair.userData.movingZ = false;
 	}
 	if (chair.userData.movingX) {
 		chair.userData.velocityX += chair.userData.accelX;
-		chair.position.x += chair.userData.velocityX/chair.userData.factor*delta;
+		chair.position.x += chair.userData.velocityX/chair.userData.factor * delta;
 		if (chair.userData.velocityX == 0)
 			chair.userData.movingX = false;
 	}
