@@ -342,7 +342,7 @@ function init() {
 
 	render();
 
-	window.addEventListener("keypress", onKeyDown);
+	window.addEventListener("keydown", onKeyDown);
 	window.addEventListener("keyup", onKeyUp);
 	window.addEventListener("resize", onResize);
 }
