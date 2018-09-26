@@ -1,5 +1,7 @@
-var camera, scene, renderer, chair;
-
+var camera;
+var scene;
+var renderer;
+var chair;
 var clock = new THREE.Clock();
 
 //-----------------------------------------------------------------------------------------------------------
@@ -13,11 +15,8 @@ function render() {
 function createAxes() {
 	var axes = new THREE.AxesHelper(25);
 
-	// z = blue
-	// y = green
-	// x = red
+	// z = blue, y = green, x = red
 	axes.position.set(-300, 100, 0);
-
 	scene.add(axes);
 }
 
@@ -44,7 +43,7 @@ function createScene() {
 	createGround();
 	table = createTable(-20, 80, -50);
 	lamp  = createLamp(-100, 4, -100, Math.PI/12, -Math.PI/3, Math.PI/2);
-	createChair(60, 0, -50);
+	createChair(100, 0, -50);
 
 	table.rotation.set(0, Math.PI/4, 0);
 	lamp.scale.set(0.5, 0.5, 0.5);
@@ -234,9 +233,9 @@ function lampCreateArm(obj, x, y, z, rotGlobal, rotHinge) {
 function createChair(x, y, z) {
 	chair = new THREE.Object3D();
 	
-	chair.userData = {movingX: false, movingZ: false, velocityZ: 0, velocityX: 0, accelZ: 7, accelX: 7, factor: 1};
+	chair.userData = {movingX: false, movingZ: false, velocityZ: 0, velocityX: 0, accelZ: 5, accelX: 5, factor: 100};
 
-	var frame = chairCreateFrame(chair, 0, 50, 0, 6);
+	var frame = chairCreateFrame(chair, 0, 0, 0, 4);
 	chairCreateSeat(frame, 0, 0, 0, -Math.PI/12);
 
 	scene.add(chair);
@@ -252,6 +251,8 @@ function chairCreateSeat(obj, x, y, z, rotBack) {
 	var mesh;
 
 	seatAddBase(seat, 60, 6, 60, 0, 0, 0, 0x0E6DAC);
+	seatAddArmRest(seat, 24, 4, 12, 0, 3, 28, 0x0A60A9);
+	seatAddArmRest(seat, 24, 4, 12, 0, 3, -28, 0x0A60A9);
 	seatAddBase(hinge, 6, 100, 60, 0, 47, 0, 0x0A60A9);
 
 	seat.add(hinge);
@@ -271,6 +272,22 @@ function chairCreateSeat(obj, x, y, z, rotBack) {
 		mesh.position.set(offX, offY, offZ);
 		obj.add(mesh);
 	}
+
+	function seatAddArmRest(obj, w, h, d, offX, offY, offZ, color) {
+		geometry = new THREE.BoxGeometry(w / 10, h * 4, w / 10);
+		material = new THREE.MeshBasicMaterial({color: color, wireframe: true});
+		mesh     = new THREE.Mesh(geometry, material);
+
+		mesh.position.set(offX, offY + (h * 4) / 2, offZ);
+		obj.add(mesh);
+
+		geometry = new THREE.BoxGeometry(w, h, d);
+		material = new THREE.MeshBasicMaterial({color: color, wireframe: true});
+		mesh     = new THREE.Mesh(geometry, material);
+
+		mesh.position.set(offX, offY + h * 4, offZ);
+		obj.add(mesh);
+	}
 }
 
 function chairCreateFrame(obj, x, y, z, axesNo) {
@@ -287,39 +304,53 @@ function chairCreateFrame(obj, x, y, z, axesNo) {
 
 	frameAddAxis(4, 50, 4, 0, 0, -25, 0);
 	for (let angle = 0; angle < Math.PI; angle = angle + 2*Math.PI/axesNo) {
-		frameAddAxis(50, 4, 4, angle, 0, -50, 0);
+		var axis = frameAddAxis(50, 4, 4, angle, 0, -50, 0);
+		frameAddWheel(axis, 8, 2, 8, 16, Math.PI/2, 25 + 1, 0, 0);
+		frameAddWheel(axis, 8, 2, 8, 16, Math.PI/2, -(25 + 1), 0, 0);
 	}
 
 	obj.add(frame);
-	frame.position.set(x, y + 2, z);
+	frame.position.set(x, y + 50 + 8 + 2, z);
 
 	return frame;
 
 	function frameAddAxis(w, h, d, angle, offX, offY, offZ) {
 		geometry = new THREE.BoxGeometry(w, h, d);
-		material = new THREE.MeshBasicMaterial({color: 0x1D4D6C, wireframe: true});
+		material = new THREE.MeshBasicMaterial({color: 0x1764BC, wireframe: true});
 		mesh     = new THREE.Mesh(geometry, material);
 
 		mesh.position.set(offX, offY, offZ);
 		mesh.rotation.set(0, angle, 0);
 		frame.add(mesh);
+
+		return mesh;
+	}
+
+	function frameAddWheel(axis, radius, tube, radialSegments, tubularSegments, angle, offX, offY, offZ) {
+		geometry = new THREE.TorusGeometry(radius, tube, radialSegments, tubularSegments);
+		material = new THREE.MeshBasicMaterial({color: 0x3381DA, wireframe: true});
+		mesh     = new THREE.Mesh(geometry, material);
+
+		mesh.position.set(offX, offY, offZ);
+		mesh.rotation.set(0, angle, 0);
+		axis.add(mesh);
 	}
 
 }
 
 function moveChair() {
 
-	var delta = clock.getDelta();
+	var multiplier = 60 * clock.getDelta(); // base framerate is 60
 
 	if (chair.userData.movingZ) {
 		chair.userData.velocityZ += chair.userData.accelZ;
-		chair.position.z += chair.userData.velocityZ/chair.userData.factor * delta;
+		chair.position.z += chair.userData.velocityZ / chair.userData.factor * multiplier;
 		if (chair.userData.velocityZ == 0)
 			chair.userData.movingZ = false;
 	}
 	if (chair.userData.movingX) {
 		chair.userData.velocityX += chair.userData.accelX;
-		chair.position.x += chair.userData.velocityX/chair.userData.factor * delta;
+		chair.position.x += chair.userData.velocityX / chair.userData.factor * multiplier;
 		if (chair.userData.velocityX == 0)
 			chair.userData.movingX = false;
 	}
@@ -372,9 +403,8 @@ function onKeyDown(e) {
 		case 'a':
 		case 'A':
 			scene.traverse(function(node) {
-				if (node instanceof THREE.Mesh) {
+				if (node instanceof THREE.Mesh)
 					node.material.wireframe = !node.material.wireframe;
-				}
 			});
 			break;
 		case 'ArrowLeft':
@@ -406,12 +436,10 @@ function onKeyUp(e) {
 		case 'ArrowLeft':
 			if (chair.userData.velocityZ > 0)
 				chair.userData.accelZ = -chair.userData.accelZ;
-			//chair.userData.moving = false;
 			break;
 		case 'ArrowRight':
 			if (chair.userData.velocityZ < 0)
 				chair.userData.accelZ = -chair.userData.accelZ;
-			//chair.userData.moving = false;
 			break;
 		case 'ArrowUp':
 			if (chair.userData.velocityX < 0)
