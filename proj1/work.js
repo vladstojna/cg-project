@@ -2,6 +2,7 @@ var camera;
 var scene;
 var renderer;
 var chair;
+var chairWheels = new Array();
 var clock = new THREE.Clock();
 
 //-----------------------------------------------------------------------------------------------------------
@@ -253,7 +254,7 @@ function chairCreateSeat(obj, x, y, z, rotBack) {
 	seatAddBase(seat, 60, 6, 60, 0, 0, 0, 0x0E6DAC);
 	seatAddArmRest(seat, 24, 4, 12, 0, 3, 28, 0x0A60A9);
 	seatAddArmRest(seat, 24, 4, 12, 0, 3, -28, 0x0A60A9);
-	seatAddBase(hinge, 6, 100, 60, 0, 47, 0, 0x0A60A9);
+	seatAddBase(hinge, 6, 100, 64, 0, 47, 0, 0x0A60A9);
 
 	seat.add(hinge);
 	obj.add(seat);
@@ -297,6 +298,7 @@ function chairCreateFrame(obj, x, y, z, axesNo) {
 	}
 
 	var frame = new THREE.Object3D();
+	var axis;
 
 	var material;
 	var geometry;
@@ -304,13 +306,13 @@ function chairCreateFrame(obj, x, y, z, axesNo) {
 
 	frameAddAxis(4, 50, 4, 0, 0, -25, 0);
 	for (let angle = 0; angle < Math.PI; angle = angle + 2*Math.PI/axesNo) {
-		var axis = frameAddAxis(50, 4, 4, angle, 0, -50, 0);
-		frameAddWheel(axis, 8, 2, 8, 16, Math.PI/2, 25 + 1, 0, 0);
-		frameAddWheel(axis, 8, 2, 8, 16, Math.PI/2, -(25 + 1), 0, 0);
+		axis = frameAddAxis(50, 4, 4, angle, 0, -50, 0);
+		chairWheels.push(frameAddWheel(axis, 8, 2, 8, 16, Math.PI/2, 24, -12, 0));
+		chairWheels.push(frameAddWheel(axis, 8, 2, 8, 16, Math.PI/2, -24, -12, 0));
 	}
 
 	obj.add(frame);
-	frame.position.set(x, y + 50 + 8 + 2, z);
+	frame.position.set(x, y + 50 + 8 + 2 + 12, z);
 
 	return frame;
 
@@ -334,8 +336,16 @@ function chairCreateFrame(obj, x, y, z, axesNo) {
 		mesh.position.set(offX, offY, offZ);
 		mesh.rotation.set(0, angle, 0);
 		axis.add(mesh);
+
+		return mesh;
 	}
 
+}
+
+function rotateWheels(distance) {
+	chairWheels.forEach(function(wheel) {
+		wheel.rotation.x += distance / (wheel.geometry.parameters.radius + wheel.geometry.parameters.tube);
+	});
 }
 
 function moveChair() {
@@ -345,12 +355,14 @@ function moveChair() {
 	if (chair.userData.movingZ) {
 		chair.userData.velocityZ += chair.userData.accelZ;
 		chair.position.z += chair.userData.velocityZ / chair.userData.factor * multiplier;
+		rotateWheels(chair.userData.velocityZ / chair.userData.factor * multiplier);
 		if (chair.userData.velocityZ == 0)
 			chair.userData.movingZ = false;
 	}
 	if (chair.userData.movingX) {
 		chair.userData.velocityX += chair.userData.accelX;
 		chair.position.x += chair.userData.velocityX / chair.userData.factor * multiplier;
+		rotateWheels(chair.userData.velocityX / chair.userData.factor * multiplier);
 		if (chair.userData.velocityX == 0)
 			chair.userData.movingX = false;
 	}
@@ -374,8 +386,8 @@ function init() {
 	render();
 
 	window.addEventListener("keydown", onKeyDown);
-	window.addEventListener("keyup", onKeyUp);
-	window.addEventListener("resize", onResize);
+	window.addEventListener("keyup",   onKeyUp);
+	window.addEventListener("resize",  onResize);
 }
 
 function onKeyDown(e) {
