@@ -10,10 +10,12 @@ var camera
 
 
 function render() {
+	// Render scene using camera
 	renderer.render(scene, camera);
 }
 
 function createAxes(size, x, y, z) {
+	// Debug axes
 	var axes = new THREE.AxesHelper(size);
 	axes.position.set(x, y, z);
 	scene.add(axes);
@@ -21,19 +23,33 @@ function createAxes(size, x, y, z) {
 	return axes;
 }
 
-
 function createScene() {
 	scene = new THREE.Scene();
 
+	// Add playfield to scene
 	var field = new Playfield(300, scene, 0x404040, 0x505050);
 
 	createAxes(25, -300, 100, 0);
 
+	// Ground the playfield
 	field.rotation.x = Math.PI/2;
 	field.position.set(0, 0, 0);
 
+	/*	Ball possible coordinates:
+	- Number of distinct x values: field width - 2 * ball radius + 1 (zero)
+	- Starting x value: - (field width / 2 - ball radius)
+	- Number of distinct y values:  field height - 2 * ball radius + 1 (zero)
+	- Starting y value: - (field height / 2 - ball radius)	*/
+
+	var diameter = field.wallHeight();
+	var distX    = field.width - 2 * diameter/2 + 1;
+	var distY    = field.height - 2 * diameter/2 + 1;
+	var startX   = - (field.width / 2 - diameter/2);
+	var startY   = - (field.height / 2 - diameter/2);
+
+	// Add 10 balls to the scene on random starting positions
 	for (let i = 0; i < 10; i++) {
-		field.addBall(15, Math.random() * 285, Math.random() * 135)
+		field.addBall(diameter, Math.random() * distX + startX, Math.random() * distY + startY)
 	}
 
 	scene.add(field)

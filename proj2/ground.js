@@ -20,11 +20,20 @@ class Playfield extends THREE.Object3D {
 		// Balls
 		this.balls = new Array();
 
+		// Create ground
 		this.createPlane(gcolor)
 
+		// Add walls parallel to z-axis
+		/*	width = ground height
+			x-position = +/- ground height = 1/2 * ground width
+			rotation = 90 deg	*/
 		this.addWall(this.height,  this.height, 0, wcolor, Math.PI/2)
 		this.addWall(this.height, -this.height, 0, wcolor, Math.PI/2)
 
+		// Add walls parallel to x-axis
+		/*	width = ground width
+			y-position = +/- 1/2 * ground height
+			rotation = 0 deg	*/
 		this.addWall(this.width, 0, -this.height/2, wcolor)
 		this.addWall(this.width, 0,  this.height/2, wcolor)
 	}
@@ -38,11 +47,13 @@ class Playfield extends THREE.Object3D {
 
 		var plane = new THREE.Mesh(geometry, material);
 
+		// Add ground to playfield
 		this.add(plane)
 		plane.add(new THREE.AxesHelper(15))
 	}
 
 	addWall(w, x, y, color, rot=0) {
+		// Wall height must be 1/10th of ground's diagonal
 		var geometry = new THREE.PlaneGeometry(w, this.diag / 10, 1, 1);
 
 		var material = new THREE.MeshBasicMaterial({color: color,
@@ -50,21 +61,30 @@ class Playfield extends THREE.Object3D {
 
 		var plane = new THREE.Mesh(geometry, material);
 
+		// Add wall to playfield
 		this.add(plane)
 		plane.add(new THREE.AxesHelper(15))
 
+		// Set wall position
 		plane.position.x = x;
 		plane.position.y = y;
 		plane.position.z = -this.diag / 20;
 
+		// Raise the walls up
 		plane.rotation.x = Math.PI/2;
+		// Turn them if necessary
 		plane.rotation.y = rot;
 	}
 
 	width()  { return this.width;  }
 	height() { return this.height; }
 
-	addBall(rad, x, y) {
+	wallHeight() { return this.diag / 10; }
+
+	addBall(dia, x, y) {
+		// Get ball radius
+		var rad = dia / 2
+
 		var geometry = new THREE.SphereGeometry(rad, 24, 24);
 		var material = new THREE.MeshBasicMaterial({color: 0xffff00,
 			wireframe: true});
