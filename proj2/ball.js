@@ -27,7 +27,27 @@ class Ball extends THREE.Object3D {
 		this.add(sphere);
 		field.add(this);
 
-		this.rotation.z = rot;
+		this.add(new THREE.AxesHelper(100))
+
+		// Reset ball rotation as it's initially altered once the ball is added to the field
+		this.rotation.x = Math.PI / 2;
+		// Update ball direction
+		this.rotation.y = rot;
+		// Set initial position
 		this.position.set(x, y, -rad);
+	}
+
+	updatePos(time) {
+		var delta = this.vel * time;
+
+		// Move *delta* units
+		this.translateX(delta);
+		// Update ball position
+		this.x += delta;
+	}
+
+	incVelocity(inc) {
+		// Increase ball velocity
+		this.vel += inc;
 	}
 }

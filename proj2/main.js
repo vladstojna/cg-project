@@ -7,7 +7,11 @@
 
 var scene
 var camera
+var clock
+var then
 
+// Other options: iterate scene children array?
+var field
 
 function render() {
 	// Render scene using camera
@@ -27,7 +31,7 @@ function createScene() {
 	scene = new THREE.Scene();
 
 	// Add playfield to scene
-	var field = new Playfield(300, scene, 0x404040, 0x505050);
+	field = new Playfield(300, scene, 0x404040, 0x505050);
 
 	createAxes(25, -300, 100, 0);
 
@@ -49,6 +53,7 @@ function createScene() {
 
 	// Add 10 balls to the scene on random starting positions
 	for (let i = 0; i < 10; i++) {
+		// diameter, x pos, y pos
 		field.addBall(diameter, Math.random() * distX + startX, Math.random() * distY + startY)
 	}
 
@@ -69,6 +74,46 @@ function createCamera() {
 	camera.lookAt(scene.position);
 }
 
+function createClock() {
+	clock = new THREE.Clock();
+}
+
+function initTimer() {
+	then = Date.now();
+}
+
+function updateVel() {
+	/* Could technically use setInterval
+	but there's no point when we can achieve
+	the same result with a simple condition check */
+
+	// Get current time
+	var now = Date.now();
+	// Check if elapsed time is greater than refresh time
+	elapsed = now - then;
+	// Refresh time is in ms (10 seconds)
+	if (elapsed > 10*1000) {
+		then = now;
+		// Increase velocity by 10
+		field.accelBalls(10);
+	}
+}
+
+function animate() {
+
+	// Gets frametime
+	var time = clock.getDelta();
+
+	// Check if ball velocity needs to be updated
+	updateVel();
+
+	// Move balls
+	field.moveBalls(time);
+
+	render()
+	requestAnimationFrame(animate);
+}
+
 function init() {
 	renderer = new THREE.WebGLRenderer({antialias: true});
 
@@ -78,6 +123,8 @@ function init() {
 
 	createScene();
 	createCamera();
+	createClock();
+	initTimer();
 
 	render();
 }

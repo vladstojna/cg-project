@@ -85,10 +85,25 @@ class Playfield extends THREE.Object3D {
 		// Get ball radius
 		var rad = dia / 2
 
-		var ball = new Ball(this, rad, 0xFFFF00, x, y, 0, 0);
+		// Create new ball
+		// parent, radius, color, x pos, y pos, initial velocity, initial direction
+		var ball = new Ball(this, rad, 0xFFFF00, x, y, 20, Math.random() * 2*Math.PI);
 
 		this.add(ball)
 		this.balls.push(ball)
 	}
 
+	moveBalls(time) {
+		// Iterate through array of Ball objects and update their position
+		this.balls.forEach(function(ball) {
+			ball.updatePos(time);
+		})
+	}
+
+	accelBalls(inc) {
+		// Iterate through array of Ball objects and update their velocity
+		this.balls.forEach(function(ball) {
+			ball.incVelocity(inc);
+		})
+	}
 }
