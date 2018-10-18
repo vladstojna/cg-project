@@ -1,18 +1,34 @@
+
+// Scene variables
 var camera;
 var scene;
 var renderer;
+
+// Scene objects
 var chair;
+var table;
+var lamp;
+var ground;
+
+// Misc variables
 var chairWheels = new Array();
 var clock = new THREE.Clock();
 var axes;
 
-//-----------------------------------------------------------------------------------------------------------
+// Window size
+var width;
+var height;
+
+// Flags
+var wireframe = true;
+
+//------------------------------------------------------------------------------
 
 function render() {
 	renderer.render(scene, camera);
 }
 
-//-----------------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 function createAxes() {
 	axes = new THREE.AxesHelper(25);
@@ -30,31 +46,28 @@ function createGround() {
 	plane.position.set(0, 0, 0);
 
 	scene.add(plane);
+
+	return plane
 }
 
-//-----------------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 function createScene() {
-	var table;
-	var lamp;
-
 	scene = new THREE.Scene();
 
 	createAxes();
-	createGround();
-	table = createTable(-20, 80, -50);
-	lamp  = createLamp(-100, 4, -100, Math.PI/12, -Math.PI/3, Math.PI/2);
-	createChair(100, 0, -50, -Math.PI/12, 6);
+	ground = createGround();
+	table  = createTable(-20, 80, -50);
+	lamp   = createLamp(-100, 4, -100, Math.PI/12, -Math.PI/3, Math.PI/2);
+	chair  = createChair(100, 0, -50, -Math.PI/12, 6);
 
 	table.rotation.set(0, Math.PI/4, 0);
 	lamp.scale.set(0.5, 0.5, 0.5);
-
-	console.log(scene.children);
 }
 
 function createCamera() {
-	var width = window.innerWidth;
-	var height = window.innerHeight;
+	width  = window.innerWidth;
+	height = window.innerHeight;
 
 	console.log("Width:", width);
 	console.log("Height:", height);
@@ -62,11 +75,10 @@ function createCamera() {
 	camera = new THREE.OrthographicCamera(width / -4, width / 4, height / 4, height / -4, 1, 10000);
 
 	// Normal
-	camera.position.set(500, 200, 500);
-	camera.lookAt(scene.position);
+	changeCam(500, 200, 500)
 }
 
-//-----------------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 function createTable(x, y, z) {
 
@@ -110,7 +122,8 @@ function createTable(x, y, z) {
 	return table;
 }
 
-//-----------------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+
 function createLamp(x, y, z, rotGlobal, rotTop, rotHat) {
 	var lamp     = new THREE.Object3D();
 	var arm;
@@ -236,28 +249,37 @@ function lampCreateArm(obj, x, y, z, rotGlobal, rotHinge) {
 	}
 }
 
-//-----------------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 function createChair(x, y, z, angle, axisNo) {
-	chair = new THREE.Object3D();
+	var chair = new THREE.Object3D();
 
 	axes = new THREE.AxesHelper(10);
 	
-	chair.userData = {movingXDown: false, movingXUp: false, velocity: 0, accel: 5, factor: 100, rotatingLeft: false, rotatingRight: false, rotAngle: Math.PI/60};
+	chair.userData = {
+		movXDown: false,
+		movXUp: false,
+		vel: 0,
+		accel: 5,
+		rotLeft: false,
+		rotRight: false,
+		rotAngle: Math.PI
+	};
 
 	var frame = chairCreateFrame(chair, 0, 0, 0, axisNo);
 	chairCreateSeat(frame, 0, 0, 0, angle);
 
+	chair.add(axes);
+
 	scene.add(chair);
 	chair.position.set(x, y, z);
 
-	chair.add(axes);
+	return chair
 }
 
 function chairCreateSeat(obj, x, y, z, rotBack) {
 	var seat  = new THREE.Object3D();
 	var hinge = new THREE.Object3D();
-	var back;
 	var base;
 
 	var material;
@@ -356,40 +378,80 @@ function chairCreateFrame(obj, x, y, z, axesNo) {
 
 }
 
+//------------------------------------------------------------------------------
+
+function toggleWireframe() {
+	scene.traverse(function(node) {
+		if (node instanceof THREE.Mesh)
+			node.material.wireframe = wireframe;
+	});
+}
+
+function changeCam(x, y, z) {
+	camera.position.set(x, y, z);
+	camera.lookAt(scene.position);
+}
+
+function scaleScene(h, hNew, w, wNew) {
+	var mult;
+
+	if (hNew <= wNew)
+		mult = hNew / h
+	else
+		mult = wNew / w
+
+	scene.scale.set(mult, mult, mult);
+}
+
+//------------------------------------------------------------------------------
+
 function rotateWheels(distance) {
 	chairWheels.forEach(function(wheel) {
 		wheel.rotateZ(distance / (wheel.geometry.parameters.radius + wheel.geometry.parameters.tube));
 	});
 }
 
-function moveChair() {
-
-	var multiplier = 60 * clock.getDelta(); // base framerate is 60
-	var distance = chair.userData.velocity / chair.userData.factor * multiplier;
-
-	if (chair.userData.rotatingLeft)
-		chair.rotateY(chair.userData.rotAngle * multiplier);
-
-	if (chair.userData.rotatingRight)
-		chair.rotateY(-chair.userData.rotAngle * multiplier);
-
-	if (chair.userData.movingXDown && !chair.userData.movingXUp || !chair.userData.movingXUp && chair.userData.velocity < 0 || chair.userData.movingXDown && chair.userData.movingXUp && chair.userData.velocity < 0) {
-		chair.userData.velocity += chair.userData.accel;
-		chair.translateX(distance);
-		rotateWheels(-distance);
-	}
-
-	if (chair.userData.movingXUp && !chair.userData.movingXDown || !chair.userData.movingXDown && chair.userData.velocity > 0 || chair.userData.movingXDown && chair.userData.movingXUp && chair.userData.velocity > 0) {
-		chair.userData.velocity -= chair.userData.accel;
-		chair.translateX(distance);
-		rotateWheels(-distance);
-	}
-
-	render();
-	requestAnimationFrame(moveChair);
+function move(vel, accel, time) {
+	return vel * time + accel * time * time
 }
 
-//-----------------------------------------------------------------------------------------------------------
+function moveForward(time) {
+	if (chair.userData.movXDown && !chair.userData.movXUp || !chair.userData.movXUp && chair.userData.vel < 0 || chair.userData.movXDown && chair.userData.movXUp && chair.userData.vel < 0) {
+		chair.translateX(move(chair.userData.vel, chair.userData.accel, time));
+		rotateWheels(-move(chair.userData.vel, chair.userData.accel, time));
+		chair.userData.vel += chair.userData.accel;
+	}
+}
+
+function moveBackward(time) {
+	if (chair.userData.movXUp && !chair.userData.movXDown || !chair.userData.movXDown && chair.userData.vel > 0 || chair.userData.movXDown && chair.userData.movXUp && chair.userData.vel > 0) {
+		chair.translateX(move(chair.userData.vel, chair.userData.accel, time));
+		rotateWheels(-move(chair.userData.vel, chair.userData.accel, time));
+		chair.userData.vel -= chair.userData.accel;
+	}
+}
+
+function animate() {
+
+	// Gets frametime
+	var time = clock.getDelta()
+
+	if (chair.userData.rotLeft)
+		chair.rotateY(chair.userData.rotAngle * time);
+
+	if (chair.userData.rotRight)
+		chair.rotateY(-chair.userData.rotAngle * time);
+
+	moveForward(time);
+	moveBackward(time);
+
+	toggleWireframe();
+
+	render();
+	requestAnimationFrame(animate);
+}
+
+//------------------------------------------------------------------------------
 
 function init() {
 	renderer = new THREE.WebGLRenderer({antialias: true});
@@ -412,55 +474,48 @@ function onKeyDown(e) {
 	switch(e.key) {
 		case '1':
 			// Normal
-			camera.position.set(500, 200, 500);
-			camera.lookAt(scene.position);
+			changeCam(500, 200, 500)
 			break;
 		case '2':
 			// Towards xy
-			camera.position.set(0, 0, 500);
-			camera.lookAt(scene.position);
+			changeCam(0, 0, 500)
 			break;
 		case '3':
 			// Towards zy
-			camera.position.set(500, 0, 0);
-			camera.lookAt(scene.position);
+			changeCam(500, 0, 0)
 			break;
 		case 'a':
 		case 'A':
-			scene.traverse(function(node) {
-				if (node instanceof THREE.Mesh)
-					node.material.wireframe = !node.material.wireframe;
-			});
+			wireframe = !wireframe;
 			break;
 		case 'ArrowLeft':
-			chair.userData.rotatingLeft = true;
+			chair.userData.rotLeft  = true;
 			break;
 		case 'ArrowRight':
-			chair.userData.rotatingRight = true;
+			chair.userData.rotRight = true;
 			break;
 		case 'ArrowUp':
-			chair.userData.movingXUp = true;
+			chair.userData.movXUp   = true;
 			break;
 		case 'ArrowDown':
-			chair.userData.movingXDown = true;
+			chair.userData.movXDown = true;
 	}
 
-	//render();
 }
 
 function onKeyUp(e) {
 	switch(e.key) {
 		case 'ArrowLeft':
-			chair.userData.rotatingLeft = false;
+			chair.userData.rotLeft  = false;
 			break;
 		case 'ArrowRight':
-			chair.userData.rotatingRight = false;
+			chair.userData.rotRight = false;
 			break;
 		case 'ArrowUp':
-			chair.userData.movingXUp = false;
+			chair.userData.movXUp   = false;
 			break;
 		case 'ArrowDown':
-			chair.userData.movingXDown = false;
+			chair.userData.movXDown = false;
 	}
 }
 
@@ -472,8 +527,9 @@ function onResize() {
 		camera.right  = renderer.getSize().width  /  4;
 		camera.top    = renderer.getSize().height /  4;
 		camera.bottom = renderer.getSize().height / -4;
+
+		scaleScene(height, window.innerHeight, width, window.innerWidth);
+
 		camera.updateProjectionMatrix();
 	}
-
-	//render();
 }
