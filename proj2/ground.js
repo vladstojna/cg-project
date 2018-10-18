@@ -85,16 +85,10 @@ class Playfield extends THREE.Object3D {
 		// Get ball radius
 		var rad = dia / 2
 
-		var geometry = new THREE.SphereGeometry(rad, 24, 24);
-		var material = new THREE.MeshBasicMaterial({color: 0xffff00,
-			wireframe: true});
-
-		var ball = new THREE.Mesh(geometry, material);
+		var ball = new Ball(this, rad, 0xFFFF00, x, y, 0, 0);
 
 		this.add(ball)
 		this.balls.push(ball)
-
-		ball.position.set(x, y, -rad)
 	}
 
 }
