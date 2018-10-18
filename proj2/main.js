@@ -6,16 +6,25 @@
 //------------------------------------------------------------------------------
 
 var scene
-var camera
+var ortoCamera
+var perspCamera
 var clock
 var then
+
+var cam1
+var cam2
 
 // Other options: iterate scene children array?
 var field
 
 function render() {
 	// Render scene using camera
-	renderer.render(scene, camera);
+	if (cam1) {
+		renderer.render(scene, ortoCamera);
+	}
+	else if (cam2) {
+		renderer.render(scene, perspCamera);
+	}
 }
 
 function createAxes(size, x, y, z) {
@@ -60,18 +69,27 @@ function createScene() {
 	scene.add(field)
 }
 
-function createCamera() {
+function createOrtographicCamera() {
 	width  = window.innerWidth;
 	height = window.innerHeight;
 
 	console.log("Width:", width);
 	console.log("Height:", height);
 
-	camera = new THREE.OrthographicCamera(width / -2, width / 2, height / 2, height / -2, 10, 5000);
+	ortoCamera = new THREE.OrthographicCamera(width / -2, width / 2, height / 2, height / -2, 10, 5000);
 
 	// Normal
-	camera.position.set(500, 200, 500);
-	camera.lookAt(scene.position);
+	ortoCamera.position.set(500, 200, 500);
+	ortoCamera.lookAt(scene.position);
+	cam1 = true;
+}
+
+function createPerspectiveCamera() {
+	perspCamera = new THREE.PerspectiveCamera(90, 0.5, 1, 1000);
+
+	perspCamera.position.set(400, 500, 0);
+	perspCamera.lookAt(scene.position);
+	cam2 = false;
 }
 
 function createClock() {
@@ -110,7 +128,8 @@ function animate() {
 	// Move balls
 	field.moveBalls(time);
 
-	render()
+	render();
+
 	requestAnimationFrame(animate);
 }
 
@@ -122,9 +141,27 @@ function init() {
 	document.body.appendChild(renderer.domElement);
 
 	createScene();
-	createCamera();
+	createOrtographicCamera();
+	createPerspectiveCamera();
 	createClock();
 	initTimer();
 
 	render();
+
+	window.addEventListener("keydown", onKeyDown);
+}
+
+function onKeyDown(e) {
+	switch(e.key) {
+		case '1':
+			// Normal
+			cam1 = true;
+			cam2 = false;
+			break;
+		case '2':
+			console.log("changing cams")
+			cam1 = false;
+			cam2 = true;
+			break;
+	}
 }
