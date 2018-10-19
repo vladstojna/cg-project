@@ -40,7 +40,7 @@ function createScene() {
 	scene = new THREE.Scene();
 
 	// Add playfield to scene
-	field = new Playfield(300, scene, 0x404040, 0x505050);
+	field = new Playfield(300, 0x404040, 0x505050);
 
 	createAxes(25, -300, 100, 0);
 
@@ -48,23 +48,9 @@ function createScene() {
 	field.rotation.x = Math.PI/2;
 	field.position.set(0, 0, 0);
 
-	/*	Ball possible coordinates:
-	- Number of distinct x values: field width - 2 * ball radius + 1 (zero)
-	- Starting x value: - (field width / 2 - ball radius)
-	- Number of distinct y values:  field height - 2 * ball radius + 1 (zero)
-	- Starting y value: - (field height / 2 - ball radius)	*/
-
-	var diameter = field.wallHeight();
-	var distX    = field.width - 2 * diameter/2 + 1;
-	var distY    = field.height - 2 * diameter/2 + 1;
-	var startX   = - (field.width / 2 - diameter/2);
-	var startY   = - (field.height / 2 - diameter/2);
-
-	// Add 10 balls to the scene on random starting positions
-	for (let i = 0; i < 10; i++) {
-		// diameter, x pos, y pos
-		field.addBall(diameter, Math.random() * distX + startX, Math.random() * distY + startY)
-	}
+	// Add 10 balls to the field
+	for (let i = 0; i < 1; i++)
+		field.addBall(field.wallHeight() / 2, 0xFFFF00);
 
 	scene.add(field)
 }
@@ -159,7 +145,6 @@ function onKeyDown(e) {
 			cam2 = false;
 			break;
 		case '2':
-			console.log("changing cams")
 			cam1 = false;
 			cam2 = true;
 			break;

@@ -2,41 +2,59 @@
 
 class Ball extends THREE.Object3D {
 
+	/* Constructor:
+	 * field - playfield where the ball resides
+	 * rad   - ball radius
+	 * color - ball color
+	 * x   - initial x position
+	 * y   - initial y position
+	 * vel - initial velocity
+	 * rot - initial direction of movement
+	 */
 	constructor(field, rad, color, x, y, vel, rot) {
 		super();
 
-		this.rad = rad;
+		this.field = field;
+		this.rad   = rad;
+		this.color = color;
 
-		this.x = x;
-		this.y = y;
+		this.ix = x;
+		this.iy = y;
 
 		this.vel = vel;
 		this.rot = rot;
 
-		this.createBall(field, rad, color, x, y, rot);
+		this.createBall();
 	}
 
-	createBall(field, rad, color, x, y, rot) {
-		var geometry = new THREE.SphereGeometry(rad, 24, 24);
+	/* createBall: creates a ball
+	 * rad - ball radius
+	 * color - ball color
+	 * x - initial x positon
+	 * y - initial y position
+	 * rot - initial direction of movement
+	 */
+	createBall() {
+		var geometry = new THREE.SphereGeometry(this.rad, 24, 24);
 		
-		var material = new THREE.MeshBasicMaterial({color: color,
-			wireframe: true});
+		var material = new THREE.MeshBasicMaterial({
+			color: this.color,
+			wireframe: true
+			});
 
 		var sphere = new THREE.Mesh(geometry, material);
 
 		this.add(sphere);
-		field.add(this);
-
-		this.add(new THREE.AxesHelper(100))
-
-		// Reset ball rotation as it's initially altered once the ball is added to the field
-		this.rotation.x = Math.PI / 2;
+		this.add(new THREE.AxesHelper(50))
+		this.field.add(this);
+		
 		// Update ball direction
-		this.rotation.y = rot;
+		this.rotation.z = this.rot;
 		// Set initial position
-		this.position.set(x, y, -rad);
+		this.position.set(this.ix, this.iy, -this.rad);
 	}
 
+	/* updatePos: updates ball position */
 	updatePos(time) {
 		var delta = this.vel * time;
 
@@ -46,8 +64,8 @@ class Ball extends THREE.Object3D {
 		this.x += delta;
 	}
 
+	/* incVelocity: increase ball velocity */
 	incVelocity(inc) {
-		// Increase ball velocity
 		this.vel += inc;
 	}
 }
