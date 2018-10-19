@@ -6,12 +6,13 @@ class Playfield extends THREE.Object3D {
 	 * height - field height
 	 * gcolor - field ground color
 	 * wcolor - field wall color
+	 * aspect - field aspect ratio
 	 */
-	constructor(height, gcolor, wcolor) {
+	constructor(height, gcolor, wcolor, aspect) {
 		super()
 
 		this.height = height;
-		this.width  = 2 * height;
+		this.width  = aspect * height;
 
 		// Sets diagonal size
 		this.diag = Math.sqrt(
@@ -27,8 +28,8 @@ class Playfield extends THREE.Object3D {
 		/* width = ground height
 		 * x-position = +/- ground height = 1/2 * ground width
 		 * rotation = 90 deg */
-		this.addWall(this.height,  this.height, 0, wcolor, Math.PI/2)
-		this.addWall(this.height, -this.height, 0, wcolor, Math.PI/2)
+		this.addWall(this.height,  this.width/2, 0, wcolor, Math.PI/2)
+		this.addWall(this.height, -this.width/2, 0, wcolor, Math.PI/2)
 
 		// Add walls parallel to x-axis
 		/* width = ground width
@@ -112,7 +113,7 @@ class Playfield extends THREE.Object3D {
 			color,
 			Math.random() * distX + startX,
 			Math.random() * distY + startY,
-			20,
+			2,
 			Math.random() * 2*Math.PI);
 
 		this.add(ball);

@@ -40,7 +40,7 @@ function createScene() {
 	scene = new THREE.Scene();
 
 	// Add playfield to scene
-	field = new Playfield(300, 0x404040, 0x505050);
+	field = new Playfield(300, 0x404040, 0x505050, 2);
 
 	createAxes(25, -300, 100, 0);
 
