@@ -61,14 +61,14 @@ class Ball extends THREE.Object3D {
 	}
 
 	collisionCheck() {
-		if (this.position.y >=  this.field.height/2 ||
-			this.position.y <= -this.field.height/2)
+		if (this.position.y >=  this.field.height/2 - this.rad ||
+			this.position.y <= -this.field.height/2 + this.rad)
 		{
 			this.rotation.z = -this.rot;
 			this.rot = -this.rot;
 		}
-		else if (this.position.x >=  this.field.width/2 ||
-			     this.position.x <= -this.field.width/2)
+		else if (this.position.x >=  this.field.width/2 - this.rad ||
+			     this.position.x <= -this.field.width/2 + this.rad)
 		{
 			this.rotation.z = Math.PI - this.rot;
 			this.rot = Math.PI - this.rot;
