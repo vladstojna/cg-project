@@ -56,12 +56,23 @@ class Ball extends THREE.Object3D {
 
 	/* updatePos: updates ball position */
 	updatePos(time) {
-		var delta = this.vel * time;
+		this.translateX(this.vel * time);
+		this.collisionCheck();
+	}
 
-		// Move *delta* units
-		this.translateX(delta);
-		// Update ball position
-		this.x += delta;
+	collisionCheck() {
+		if (this.position.y >=  this.field.height/2 ||
+			this.position.y <= -this.field.height/2)
+		{
+			this.rotation.z = -this.rot;
+			this.rot = -this.rot;
+		}
+		else if (this.position.x >=  this.field.width/2 ||
+			     this.position.x <= -this.field.width/2)
+		{
+			this.rotation.z = Math.PI - this.rot;
+			this.rot = Math.PI - this.rot;
+		}
 	}
 
 	/* incVelocity: increase ball velocity */

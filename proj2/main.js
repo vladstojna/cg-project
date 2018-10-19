@@ -65,7 +65,8 @@ function createOrtographicCamera() {
 	ortoCamera = new THREE.OrthographicCamera(width / -2, width / 2, height / 2, height / -2, 10, 5000);
 
 	// Normal
-	ortoCamera.position.set(500, 200, 500);
+	//ortoCamera.position.set(500, 200, 500);
+	ortoCamera.position.set(0, 500, 0);
 	ortoCamera.lookAt(scene.position);
 	cam1 = true;
 }
