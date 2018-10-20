@@ -8,14 +8,16 @@
 var scene
 var ortoCamera
 var perspCamera
+var chaseCamera
 var clock
 var then
 
 var cam1
 var cam2
+var cam3
 
-// Other options: iterate scene children array?
 var field
+var ball = null
 
 function render() {
 	// Render scene using camera
@@ -24,6 +26,21 @@ function render() {
 	}
 	else if (cam2) {
 		renderer.render(scene, perspCamera);
+	}
+	else if (cam3) {
+		if (ball === null) {
+			ball = field.randomBall();
+		}
+		
+		var relativeOffset = new THREE.Vector3(-100, 0, -100);
+		var cameraOffset = relativeOffset.applyMatrix4(ball.matrixWorld);
+
+		chaseCamera.position.x = cameraOffset.x;
+		chaseCamera.position.y = cameraOffset.y;
+		chaseCamera.position.z = cameraOffset.z;
+		chaseCamera.lookAt(ball.position);
+		
+		renderer.render(scene, chaseCamera);
 	}
 }
 
@@ -72,11 +89,18 @@ function createOrtographicCamera() {
 }
 
 function createPerspectiveCamera() {
-	perspCamera = new THREE.PerspectiveCamera(90, 0.5, 1, 1000);
+	perspCamera = new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 1, 1000);
 
 	perspCamera.position.set(400, 500, 0);
 	perspCamera.lookAt(scene.position);
 	cam2 = false;
+}
+
+function createChaseCamera() {
+	chaseCamera = new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 1, 1000);
+	
+	cam3 = false;
+	scene.add(chaseCamera);
 }
 
 function createClock() {
@@ -130,6 +154,7 @@ function init() {
 	createScene();
 	createOrtographicCamera();
 	createPerspectiveCamera();
+	createChaseCamera();
 	createClock();
 	initTimer();
 
@@ -144,10 +169,19 @@ function onKeyDown(e) {
 			// Normal
 			cam1 = true;
 			cam2 = false;
+			cam3 = false;
+			ball = null;
 			break;
 		case '2':
 			cam1 = false;
 			cam2 = true;
+			cam3 = false;
+			ball = null;
+			break;
+		case '3':
+			cam1 = false;
+			cam2 = false;
+			cam3 = true;
 			break;
 	}
 }

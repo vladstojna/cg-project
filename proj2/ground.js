@@ -91,6 +91,10 @@ class Playfield extends THREE.Object3D {
 	height()     { return this.height;    }
 	wallHeight() { return this.diag / 10; }
 
+	randomBall() {
+		var length = this.balls.length;
+		return this.balls[Math.round(Math.random()*(length - 1))];
+	}
 
 	/* addBall: adds ball with radius and color */
 	addBall(rad, color) {
