@@ -115,6 +115,10 @@ class Ball extends THREE.Object3D {
 			if (ball.position != this.position) {
 				if (ball.position.distanceTo(this.position) <= 2 * (this.rad + pad)) {
 					console.log("ball collision");
+					
+					// m1 == m2
+					// v1f = (v1i * (m1 - m2) + 2 * v2i * m2)/(m1 + m2) <=> v1f = v2i
+					// v2f = (v2i * (m2 - m1) + 2 * v1i * m2)/(m1 + m2) <=> v2f = v1i
 
 					let temprot = ball.rot;
 					let tempvel = ball.vel;

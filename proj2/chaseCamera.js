@@ -20,7 +20,7 @@ class chaseCamera extends THREE.PerspectiveCamera {
 		
 		// Update camera position
 		// Ball coordinates (x, y, z) in WCS are given as (x, -z, y)
-		// (wallHeight, 3/2 * wallHeight, 0) is used as positional leeway
+		// (wallHeight, 3/2 * wallHeight, wallHeight) is used as positional leeway
 		this.position.set(this.ball.position.x + this.field.wallHeight() * offsetX, 
 		    -this.ball.position.z + 3/2 * this.field.wallHeight() * offsetY,
 			this.ball.position.y + this.field.wallHeight() * offsetZ);
