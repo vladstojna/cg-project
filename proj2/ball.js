@@ -24,9 +24,9 @@ class Ball extends THREE.Object3D {
 		this.vel = vel;
 		this.rot = rot;
 
-		this.oob = true; // guarantees first time entry
-
 		this.createBall();
+
+		console.log("Ball velocity:", this.vel);
 	}
 
 	/* createBall: creates a ball
@@ -47,9 +47,8 @@ class Ball extends THREE.Object3D {
 		this.sphere = new THREE.Mesh(geometry, material);
 
 		this.add(this.sphere);
-		//this.add(new THREE.AxesHelper(50))
-		this.field.add(this);
-		
+		this.add(new THREE.AxesHelper(50))
+		//this.field.add(this);
 		// Update ball direction
 		this.rotation.z = this.rot;
 		// Set initial position
@@ -61,7 +60,7 @@ class Ball extends THREE.Object3D {
 		var delta = this.vel * time;
 		this.translateX(delta);
 		this.rotateBall(delta);
-		this.collisionCheck(delta);
+		this.collisionCheck(2, delta);
 	}
 
 	/* rotateBall: rotates sphere according to movement */
@@ -111,20 +110,30 @@ class Ball extends THREE.Object3D {
 		}
 	}
 
-	collisionCheckOtherBalls(pad=0) {
+	collisionCheckOtherBalls(pad=0, transd=0) {
 		this.field.balls.forEach(ball => {
 			if (ball.position != this.position) {
 				if (ball.position.distanceTo(this.position) <= 2 * (this.rad + pad)) {
 					console.log("ball collision");
 
-					//this.translateX(-pad);
-					//ball.translateX(-pad);
+					let temprot = ball.rot;
+					let tempvel = ball.vel;
 
-					let temp = ball.rot;
+					/* Swap ball current angles */
 					ball.rot = this.rot;
-					this.rot = temp;
+					this.rot = temprot;
+
+					/* Swap ball velocities */
+					ball.vel = this.vel;
+					this.vel = tempvel;
+
+					/* Rotate balls */
 					ball.rotation.z = ball.rot;
 					this.rotation.z = this.rot;
+
+					/* After collision treatment, translate same amount in opposite direction */
+					this.translateX(transd);
+					ball.translateX(transd);
 				}
 			}
 		});
@@ -133,16 +142,12 @@ class Ball extends THREE.Object3D {
 	/* collisionChek: tests existence of collision and updates direction
 	 * pad - additional bounding sphere size
 	 */
-	collisionCheck(pad=0) {
-		if (this.outOfBounds(pad))
-			console.log("out of bounds");
-
+	collisionCheck(pad=0, transd=0) {
 		this.collisionCheckHeight(pad);
 		this.collisionCheckWidth(pad);
-		this.collisionCheckOtherBalls(pad);
-
-		if (this.outOfBounds(pad))
-			this.translateX(pad);
+		/* After collision treatment, translate same amount in opposite direction */
+		this.translateX(transd);
+		this.collisionCheckOtherBalls(pad, transd);
 	}
 
 	/* incVelocity: increase ball velocity */
