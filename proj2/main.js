@@ -8,7 +8,7 @@
 var scene
 var ortoCamera
 var perspCamera
-var chaseCamera
+var followCamera
 var clock
 var then
 
@@ -28,19 +28,10 @@ function render() {
 		renderer.render(scene, perspCamera);
 	}
 	else if (cam3) {
-		if (ball === null) {
-			ball = field.randomBall();
-		}
+		// updateVPN parameters change camera VPN; y should not be -1
+		followCamera.updateVPN(1, 1, 0);
 		
-		var relativeOffset = new THREE.Vector3(-100, 0, -100);
-		var cameraOffset = relativeOffset.applyMatrix4(ball.matrixWorld);
-
-		chaseCamera.position.x = cameraOffset.x;
-		chaseCamera.position.y = cameraOffset.y;
-		chaseCamera.position.z = cameraOffset.z;
-		chaseCamera.lookAt(ball.position);
-		
-		renderer.render(scene, chaseCamera);
+		renderer.render(scene, followCamera);
 	}
 }
 
@@ -66,7 +57,7 @@ function createScene() {
 	field.position.set(0, 0, 0);
 
 	// Add 10 balls to the field
-	for (let i = 0; i < 1; i++)
+	for (let i = 0; i < 2; i++)
 		field.addBall(field.wallHeight() / 2, 0xFFFF00);
 
 	scene.add(field)
@@ -97,10 +88,9 @@ function createPerspectiveCamera() {
 }
 
 function createChaseCamera() {
-	chaseCamera = new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 1, 1000);
+	followCamera = new chaseCamera(90, window.innerWidth / window.innerHeight, 1, 1000, field);
 	
 	cam3 = false;
-	scene.add(chaseCamera);
 }
 
 function createClock() {
@@ -170,13 +160,13 @@ function onKeyDown(e) {
 			cam1 = true;
 			cam2 = false;
 			cam3 = false;
-			ball = null;
+			followCamera.ball = null;
 			break;
 		case '2':
 			cam1 = false;
 			cam2 = true;
 			cam3 = false;
-			ball = null;
+			followCamera.ball = null;
 			break;
 		case '3':
 			cam1 = false;
