@@ -19,8 +19,11 @@ class Playfield extends THREE.Object3D {
 			this.height * this.height + this.width * this.width
 		)
 
-		// Array with balls
+		/* Array will ball objects */
 		this.balls = new Array();
+
+		/* Array with position already populated */
+		this.takenPositions = new Array();
 
 		this.createPlane(gcolor)
 
@@ -96,28 +99,61 @@ class Playfield extends THREE.Object3D {
 		return this.balls[Math.round(Math.random()*(length - 1))];
 	}
 
+	/* isFreePosition: checks if position is free
+	 * p - recently generated position
+	 * r - ball radius, to calculate distance
+	 */
+	isFreePosition(p, r) {
+		var free = true;
+		this.takenPositions.forEach(t => {
+			if (t.distanceTo(p) <= 2 * r) {
+				free = false;
+				return;
+			}
+		});
+		return free;
+	}
+
+	/* getFreePosition: guarantees generation
+	 *    of a position not yet taken by another entity
+	 */
+	getFreePosition(rad) {
+		/* Ball possible coordinates:
+		 * xMin: minimum value for x + 1 padding
+		 * xMax: maximum value for x + 1 padding
+		 * yMin: minimum value for y + 1 padding
+		 * yMax: maximum value for y + 1 padding
+		 */
+		var xMin = -field.width  / 2 + (rad + 1);
+		var xMax =  field.width  / 2 - (rad + 1);
+		var yMin = -field.height / 2 + (rad + 1);
+		var yMax =  field.height / 2 - (rad + 1);
+
+		var x = Math.floor(Math.random() * (xMax - xMin + 1) + xMin);
+		var y = Math.floor(Math.random() * (yMax - yMin + 1) + yMin);
+		var vector = new THREE.Vector3(x, y, 0);
+
+		while (!this.isFreePosition(vector, rad)) {
+			console.log("not free");
+			x = Math.floor(Math.random() * (xMax - xMin + 1) + xMin);
+			y = Math.floor(Math.random() * (yMax - yMin + 1) + yMin);
+			vector.set(x, y, 0);
+		}
+
+		this.takenPositions.push(vector);
+
+		return vector;
+	}
+
 	/* addBall: adds ball with radius and color */
 	addBall(rad, color) {
-		/*
-		Ball possible coordinates:
-		- Number of distinct x values: field width - 2 * ball radius + 1 (zero)
-		- Starting x value: - (field width / 2 - ball radius)
-		- Number of distinct y values:  field height - 2 * ball radius + 1 (zero)
-		- Starting y value: - (field height / 2 - ball radius)
-		*/
-		var distX  = field.width - 2 * rad + 1;
-		var distY  = field.height - 2 * rad + 1;
-		var startX = - (field.width / 2 - rad);
-		var startY = - (field.height / 2 - rad);
-
-		// Create new ball
-		// parent, radius, color, x pos, y pos, initial velocity, initial direction
+		var position = this.getFreePosition(rad);
 		var ball = new Ball(this,
 			rad,
 			color,
-			Math.random() * distX + startX,
-			Math.random() * distY + startY,
-			Math.floor(Math.random() * (200 - 70 + 1) + 70),
+			position.x,
+			position.y,
+			Math.floor(Math.random() * (50 - 20 + 1) + 20),
 			Math.random() * 2*Math.PI);
 
 		this.add(ball);
@@ -126,7 +162,6 @@ class Playfield extends THREE.Object3D {
 
 	/* moveBalls: updates ball positions */
 	moveBalls(time) {
-		// Iterate through array of Ball objects and update their position
 		this.balls.forEach(function(ball) {
 			ball.updatePos(time);
 		});
@@ -134,7 +169,6 @@ class Playfield extends THREE.Object3D {
 
 	/* accelBalls: updates ball velocities */
 	accelBalls(inc) {
-		// Iterate through array of Ball objects and update their velocity
 		this.balls.forEach(function(ball) {
 			ball.incVelocity(inc);
 		});
