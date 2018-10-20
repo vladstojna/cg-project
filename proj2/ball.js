@@ -24,6 +24,8 @@ class Ball extends THREE.Object3D {
 		this.vel = vel;
 		this.rot = rot;
 
+		this.oob = true; // guarantees first time entry
+
 		this.createBall();
 	}
 
@@ -35,17 +37,17 @@ class Ball extends THREE.Object3D {
 	 * rot - initial direction of movement
 	 */
 	createBall() {
-		var geometry = new THREE.SphereGeometry(this.rad, 24, 24);
+		var geometry = new THREE.SphereGeometry(this.rad, 16, 16);
 		
 		var material = new THREE.MeshBasicMaterial({
 			color: this.color,
 			wireframe: true
 			});
 
-		var sphere = new THREE.Mesh(geometry, material);
+		this.sphere = new THREE.Mesh(geometry, material);
 
-		this.add(sphere);
-		this.add(new THREE.AxesHelper(50))
+		this.add(this.sphere);
+		//this.add(new THREE.AxesHelper(50))
 		this.field.add(this);
 		
 		// Update ball direction
@@ -56,23 +58,91 @@ class Ball extends THREE.Object3D {
 
 	/* updatePos: updates ball position */
 	updatePos(time) {
-		this.translateX(this.vel * time);
-		this.collisionCheck();
+		var delta = this.vel * time;
+		this.translateX(delta);
+		this.rotateBall(delta);
+		this.collisionCheck(delta);
 	}
 
-	collisionCheck() {
-		if (this.position.y >=  this.field.height/2 ||
-			this.position.y <= -this.field.height/2)
-		{
-			this.rotation.z = -this.rot;
+	/* rotateBall: rotates sphere according to movement */
+	rotateBall(d) {
+		this.sphere.rotation.y -= d / this.rad;
+	}
+
+	/* atLimitH: tests if ball reached height limit
+	 * pad - additional bounding sphere size
+	 */
+	atLimitH(pad=0) {
+		return this.position.y >= this.field.height/2 - (this.rad + pad) ||
+			this.position.y <= -this.field.height/2 + (this.rad + pad);
+	}
+
+	/* atLimitw: tests if ball reached width limit
+	 * pad - additional bounding sphere size
+	 */
+	atLimitW(pad=0) {
+		return this.position.x >= this.field.width/2 - (this.rad + pad) ||
+			this.position.x <= -this.field.width/2 + (this.rad + pad);
+	}
+
+	/* outOfBounds: tests if ball reached any limit
+	 * pad - additional bounding sphere size
+	 */
+	outOfBounds(pad=0) {
+		return this.position.x >= this.field.width/2 - (this.rad + pad) ||
+			this.position.x <= -this.field.width/2 + (this.rad + pad) ||
+			this.position.y >= this.field.height/2 - (this.rad + pad) ||
+			this.position.y <= -this.field.height/2 + (this.rad + pad);
+	}
+
+	collisionCheckHeight(pad=0) {
+		if (this.atLimitH(pad)) {
 			this.rot = -this.rot;
+			this.rotation.z = this.rot;
+			this.sphere.rotation.z = -this.rot;
 		}
-		else if (this.position.x >=  this.field.width/2 ||
-			     this.position.x <= -this.field.width/2)
-		{
-			this.rotation.z = Math.PI - this.rot;
+	}
+
+	collisionCheckWidth(pad=0) {
+		if (this.atLimitW(pad)) {
 			this.rot = Math.PI - this.rot;
+			this.rotation.z = this.rot;
+			this.sphere.rotation.z = -this.rot;
 		}
+	}
+
+	collisionCheckOtherBalls(pad=0) {
+		this.field.balls.forEach(ball => {
+			if (ball.position != this.position) {
+				if (ball.position.distanceTo(this.position) <= 2 * (this.rad + pad)) {
+					console.log("ball collision");
+
+					//this.translateX(-pad);
+					//ball.translateX(-pad);
+
+					let temp = ball.rot;
+					ball.rot = this.rot;
+					this.rot = temp;
+					ball.rotation.z = ball.rot;
+					this.rotation.z = this.rot;
+				}
+			}
+		});
+	}
+
+	/* collisionChek: tests existence of collision and updates direction
+	 * pad - additional bounding sphere size
+	 */
+	collisionCheck(pad=0) {
+		if (this.outOfBounds(pad))
+			console.log("out of bounds");
+
+		this.collisionCheckHeight(pad);
+		this.collisionCheckWidth(pad);
+		this.collisionCheckOtherBalls(pad);
+
+		if (this.outOfBounds(pad))
+			this.translateX(pad);
 	}
 
 	/* incVelocity: increase ball velocity */
