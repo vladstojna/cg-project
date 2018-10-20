@@ -117,7 +117,7 @@ class Playfield extends THREE.Object3D {
 			color,
 			Math.random() * distX + startX,
 			Math.random() * distY + startY,
-			100,
+			Math.floor(Math.random() * (200 - 70 + 1) + 70),
 			Math.random() * 2*Math.PI);
 
 		this.add(ball);
