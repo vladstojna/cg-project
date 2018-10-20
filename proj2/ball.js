@@ -60,7 +60,7 @@ class Ball extends THREE.Object3D {
 		var delta = this.vel * time;
 		this.translateX(delta);
 		this.rotateBall(delta);
-		this.collisionCheck(2, delta);
+		this.collisionCheck(0, delta);
 	}
 
 	/* rotateBall: rotates sphere according to movement */
@@ -134,6 +134,8 @@ class Ball extends THREE.Object3D {
 					/* After collision treatment, translate same amount in opposite direction */
 					this.translateX(transd);
 					ball.translateX(transd);
+
+					return;
 				}
 			}
 		});
@@ -141,6 +143,7 @@ class Ball extends THREE.Object3D {
 
 	/* collisionChek: tests existence of collision and updates direction
 	 * pad - additional bounding sphere size
+	 * transd - translation distance to prevent ball from getting OOB
 	 */
 	collisionCheck(pad=0, transd=0) {
 		this.collisionCheckHeight(pad);
