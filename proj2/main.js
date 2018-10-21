@@ -49,7 +49,7 @@ function createScene() {
 	field.position.set(0, 0, 0);
 
 	// Add 10 balls to the field
-	for (let i = 0; i < 2; i++)
+	for (let i = 0; i < 20; i++)
 		field.addBall(field.wallHeight() / 2, 0xFFFF00);
 
 	scene.add(field)

@@ -57,8 +57,16 @@ class Ball extends THREE.Object3D {
 
 	/* updatePos: updates ball position */
 	updatePos(time) {
+		this.temppos = new THREE.Vector3(this.position.x, this.position.y, this.position.z);
+
 		var delta = this.vel * time;
-		this.translateX(delta);
+
+		var velx = Math.cos(this.rot) * delta;
+		var vely = Math.sin(this.rot) * delta;
+
+		this.temppos.x += velx;
+		this.temppos.y += vely;
+		console.log(delta, velx, vely);
 		this.rotateBall(delta);
 		this.collisionCheck(0, delta);
 	}
@@ -72,16 +80,33 @@ class Ball extends THREE.Object3D {
 	 * pad - additional bounding sphere size
 	 */
 	atLimitH(pad=0) {
-		return this.position.y >= this.field.height/2 - (this.rad + pad) ||
-			this.position.y <= -this.field.height/2 + (this.rad + pad);
+		if (this.temppos.y >= this.field.height/2 - (this.rad + pad)) {
+			this.position.y = this.field.height/2 - this.rad;
+			this.position.x = this.temppos.x;
+			return true;
+		}
+		if (this.temppos.y <= -this.field.height/2 + (this.rad + pad)) {
+			this.position.y = -this.field.height/2 + this.rad;
+			this.position.x = this.temppos.x;
+			return true;
+		}
 	}
 
 	/* atLimitw: tests if ball reached width limit
 	 * pad - additional bounding sphere size
 	 */
 	atLimitW(pad=0) {
-		return this.position.x >= this.field.width/2 - (this.rad + pad) ||
-			this.position.x <= -this.field.width/2 + (this.rad + pad);
+		if (this.temppos.x >= this.field.width/2 - (this.rad + pad)) {
+			this.position.x = this.field.width/2 - this.rad;
+			this.position.y = this.temppos.y;
+			return true;
+		}
+
+		if (this.temppos.x <= -this.field.width/2 + (this.rad + pad)) {
+			this.position.x = -this.field.width/2 + this.rad;
+			this.position.y = this.temppos.y;
+			return true;
+		}
 	}
 
 	/* outOfBounds: tests if ball reached any limit
@@ -99,7 +124,9 @@ class Ball extends THREE.Object3D {
 			this.rot = -this.rot;
 			this.rotation.z = this.rot;
 			this.sphere.rotation.z = -this.rot;
+			return true;
 		}
+		return false;
 	}
 
 	collisionCheckWidth(pad=0) {
@@ -107,13 +134,16 @@ class Ball extends THREE.Object3D {
 			this.rot = Math.PI - this.rot;
 			this.rotation.z = this.rot;
 			this.sphere.rotation.z = -this.rot;
+			return true;
 		}
+		return false;
 	}
 
 	collisionCheckOtherBalls(pad=0, transd=0) {
+		var col = false;
 		this.field.balls.forEach(ball => {
 			if (ball.position != this.position) {
-				if (ball.position.distanceTo(this.position) <= 2 * (this.rad + pad)) {
+				if (ball.position.distanceTo(this.temppos) <= 2 * (this.rad + pad)) {
 					console.log("ball collision");
 					
 					// m1 == m2
@@ -138,14 +168,17 @@ class Ball extends THREE.Object3D {
 					ball.sphere.rotation.z = -ball.rot;
 					this.sphere.rotation.z = -this.rot;
 
+					col = true;
+
 					/* After collision treatment, translate same amount in opposite direction */
 					this.translateX(transd);
-					ball.translateX(transd);
+					//ball.translateX(transd);
 
 					return;
 				}
 			}
 		});
+		return col;
 	}
 
 	/* collisionChek: tests existence of collision and updates direction
@@ -156,11 +189,11 @@ class Ball extends THREE.Object3D {
 		if (this.outOfBounds(pad))
 			console.log("out of bounds");
 
-		this.collisionCheckHeight(pad);
-		this.collisionCheckWidth(pad);
-		/* After collision treatment, translate same amount in opposite direction */
-		this.translateX(transd);
-		this.collisionCheckOtherBalls(pad, transd);
+		if (!this.collisionCheckHeight(pad) && 
+			!this.collisionCheckWidth(pad) &&
+			!this.collisionCheckOtherBalls(pad, transd))
+
+			this.translateX(transd);
 	}
 
 	/* incVelocity: increase ball velocity */
