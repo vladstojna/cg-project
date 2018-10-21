@@ -5,19 +5,21 @@
 //import Ground from "./ground.js"
 //------------------------------------------------------------------------------
 
-var scene
-var ortoCamera
-var perspCamera
-var followCamera
-var clock
-var then
+var scene;
+var ortoCamera;
+var perspCamera;
+var followCamera;
+var clock;
+var then;
 
-var cam1
-var cam2
-var cam3
+var cam1;
+var cam2;
+var cam3;
 
-var field
-var ball = null
+var field;
+var ball = null;
+
+var showAxes = true;
 
 function render() {
 	// Render scene using camera
@@ -128,6 +130,7 @@ function animate() {
 
 	// Move balls
 	field.moveBalls(time);
+	field.toggleAxes(showAxes);
 
 	render();
 
@@ -173,5 +176,8 @@ function onKeyDown(e) {
 			cam2 = false;
 			cam3 = true;
 			break;
+		case 'e':
+		case 'E':
+			showAxes = !showAxes;
 	}
 }

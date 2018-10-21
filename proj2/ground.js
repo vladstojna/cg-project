@@ -173,4 +173,11 @@ class Playfield extends THREE.Object3D {
 			ball.incVelocity(inc);
 		});
 	}
+
+	/* toggleAxes: toggles ball axisHelper */
+	toggleAxes(state) {
+		this.balls.forEach(function(ball) {
+			ball.toggleAxisHelper(state);
+		});
+	}
 }

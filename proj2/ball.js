@@ -44,11 +44,11 @@ class Ball extends THREE.Object3D {
 			wireframe: true
 			});
 
-		this.sphere = new THREE.Mesh(geometry, material);
+		this.sphere     = new THREE.Mesh(geometry, material);
+		this.axisHelper = new THREE.AxesHelper(50);
 
 		this.add(this.sphere);
-		this.add(new THREE.AxesHelper(50))
-		//this.field.add(this);
+		this.add(this.axisHelper);
 		// Update ball direction
 		this.rotation.z = this.rot;
 		// Set initial position
@@ -135,6 +135,9 @@ class Ball extends THREE.Object3D {
 					ball.rotation.z = ball.rot;
 					this.rotation.z = this.rot;
 
+					ball.sphere.rotation.z = -ball.rot;
+					this.sphere.rotation.z = -this.rot;
+
 					/* After collision treatment, translate same amount in opposite direction */
 					this.translateX(transd);
 					ball.translateX(transd);
@@ -150,6 +153,9 @@ class Ball extends THREE.Object3D {
 	 * transd - translation distance to prevent ball from getting OOB
 	 */
 	collisionCheck(pad=0, transd=0) {
+		if (this.outOfBounds(pad))
+			console.log("out of bounds");
+
 		this.collisionCheckHeight(pad);
 		this.collisionCheckWidth(pad);
 		/* After collision treatment, translate same amount in opposite direction */
@@ -160,5 +166,10 @@ class Ball extends THREE.Object3D {
 	/* incVelocity: increase ball velocity */
 	incVelocity(inc) {
 		this.vel += inc;
+	}
+
+	/* toggleAxisHelper */
+	toggleAxisHelper(state) {
+		this.axisHelper.visible = state;
 	}
 }
