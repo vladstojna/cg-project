@@ -21,7 +21,7 @@ const FIELD_WREL   = 10;
  * BALL_MINVEL  - minimum initial velocity
  */
 const BALL_NUM     = 10;
-const BALL_COLOR   = 0xFFFF00;
+const BALL_COLOR   = 0x46a1c9;
 const BALL_AXIS_SZ = 50;
 const BALL_MAXVEL  = 150;
 const BALL_MINVEL  = 50;

@@ -39,9 +39,9 @@ class Ball extends THREE.Object3D {
 	createBall() {
 		var geometry = new THREE.SphereGeometry(this.rad, 16, 16);
 		
-		var material = new THREE.MeshBasicMaterial({
+		var material = new THREE.MeshPhongMaterial({
 			color: this.color,
-			wireframe: true
+			wireframe: false
 			});
 
 		this.sphere     = new THREE.Mesh(geometry, material);
@@ -144,7 +144,6 @@ class Ball extends THREE.Object3D {
 		this.field.balls.forEach(ball => {
 			if (ball.position != this.position) {
 				if (ball.position.distanceTo(this.temppos) <= 2 * (this.rad + pad)) {
-					//console.log("ball collision");
 					
 					// m1 == m2
 					// v1f = (v1i * (m1 - m2) + 2 * v2i * m2)/(m1 + m2) <=> v1f = v2i
@@ -171,7 +170,7 @@ class Ball extends THREE.Object3D {
 					col = true;
 
 					/* After collision treatment, translate same amount in opposite direction */
-					this.translateX(transd);
+					//this.translateX(transd);
 					//ball.translateX(transd);
 
 					return;
@@ -189,7 +188,7 @@ class Ball extends THREE.Object3D {
 		//if (this.outOfBounds(pad))
 		//	console.log("out of bounds");
 
-		if (!this.collisionCheckHeight(pad) && 
+		if (!this.collisionCheckHeight(pad) &&
 			!this.collisionCheckWidth(pad) &&
 			!this.collisionCheckOtherBalls(pad, transd))
 

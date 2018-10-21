@@ -39,6 +39,9 @@ function createAxes(size, x, y, z) {
 function createScene() {
 	scene = new THREE.Scene();
 
+	var directionalLight = new THREE.DirectionalLight( 0xffffff, 0.6 );
+	directionalLight.position.set(200, 200, 100);
+
 	// Add playfield to scene
 	field = new Playfield(
 		FIELD_WIDTH,
@@ -56,7 +59,8 @@ function createScene() {
 	for (let i = 0; i < BALL_NUM; i++)
 		field.addBall(field.wallHeight() / 2, BALL_COLOR);
 
-	scene.add(field)
+	scene.add(field);
+	scene.add(directionalLight);
 }
 
 function createOrtographicCamera() {
