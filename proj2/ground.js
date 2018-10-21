@@ -48,14 +48,13 @@ class Playfield extends THREE.Object3D {
 	createPlane(color) {
 		var geometry = new THREE.PlaneGeometry(this.width, this.height, 1, 1);
 
-		var material = new THREE.MeshBasicMaterial({color: color,
+		var material = new THREE.MeshPhongMaterial({color: color,
 			side: THREE.DoubleSide, wireframe: false});
 
 		var plane = new THREE.Mesh(geometry, material);
 
 		// Add ground to playfield
 		this.add(plane)
-		plane.add(new THREE.AxesHelper(15))
 	}
 
 	/* createPlane: creates field ground
@@ -69,14 +68,13 @@ class Playfield extends THREE.Object3D {
 		// Wall height must be 1/10th of ground's diagonal
 		var geometry = new THREE.PlaneGeometry(w, this.diag / 10, 1, 1);
 
-		var material = new THREE.MeshBasicMaterial({color: color,
+		var material = new THREE.MeshPhongMaterial({color: color,
 			side: THREE.DoubleSide, wireframe: false});
 
 		var plane = new THREE.Mesh(geometry, material);
 
 		// Add wall to playfield
 		this.add(plane)
-		plane.add(new THREE.AxesHelper(15))
 
 		// Set wall position
 		plane.position.x = x;
