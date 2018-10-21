@@ -6,36 +6,26 @@
 //------------------------------------------------------------------------------
 
 var scene;
-var ortoCamera;
-var perspCamera;
-var followCamera;
+var ortoCam;
+var perspCam;
+var chaseCam;
 var clock;
 var then;
 
-var cam1;
-var cam2;
-var cam3;
+var currentCam;
 
 var field;
 var ball = null;
 
 var showAxes = true;
 
-function render() {
-	// Render scene using camera
-	if (cam1) {
-		renderer.render(scene, ortoCamera);
-	}
-	else if (cam2) {
-		renderer.render(scene, perspCamera);
-	}
-	else if (cam3) {
-		// updateVPN parameters change camera VPN; y should not be -1
-		followCamera.updateVPN(1, 1, 0);
-		
-		renderer.render(scene, followCamera);
-	}
+//------------------------------------------------------------------------------
+
+function render(cam) {
+	renderer.render(scene, cam);
 }
+
+//------------------------------------------------------------------------------
 
 function createAxes(size, x, y, z) {
 	// Debug axes
@@ -72,25 +62,25 @@ function createOrtographicCamera() {
 	console.log("Width:", width);
 	console.log("Height:", height);
 
-	ortoCamera = new THREE.OrthographicCamera(width / -2, width / 2, height / 2, height / -2, 10, 5000);
+	ortoCam = new THREE.OrthographicCamera(width / -2, width / 2, height / 2, height / -2, 10, 5000);
 
 	// Normal
-	//ortoCamera.position.set(500, 200, 500);
-	ortoCamera.position.set(0, 500, 0);
-	ortoCamera.lookAt(scene.position);
+	//ortoCam.position.set(500, 200, 500);
+	ortoCam.position.set(0, 500, 0);
+	ortoCam.lookAt(scene.position);
 	cam1 = true;
 }
 
 function createPerspectiveCamera() {
-	perspCamera = new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 1, 1000);
+	perspCam = new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 1, 1000);
 
-	perspCamera.position.set(400, 500, 0);
-	perspCamera.lookAt(scene.position);
+	perspCam.position.set(400, 500, 0);
+	perspCam.lookAt(scene.position);
 	cam2 = false;
 }
 
 function createChaseCamera() {
-	followCamera = new chaseCamera(90, window.innerWidth / window.innerHeight, 1, 1000, field);
+	chaseCam = new chaseCamera(90, window.innerWidth / window.innerHeight, 1, 1000, field);
 	
 	cam3 = false;
 }
@@ -98,6 +88,8 @@ function createChaseCamera() {
 function createClock() {
 	clock = new THREE.Clock();
 }
+
+//------------------------------------------------------------------------------
 
 function initTimer() {
 	then = Date.now();
@@ -132,10 +124,16 @@ function animate() {
 	field.moveBalls(time);
 	field.toggleAxes(showAxes);
 
-	render();
+	// Render with appropriate camera
+	if (currentCam == chaseCam)
+		// updateVPN parameters change camera VPN; y should not be -1
+		chaseCam.updateVPN(1, 1, 0);
+	render(currentCam);
 
 	requestAnimationFrame(animate);
 }
+
+//------------------------------------------------------------------------------
 
 function init() {
 	renderer = new THREE.WebGLRenderer({antialias: true});
@@ -151,30 +149,28 @@ function init() {
 	createClock();
 	initTimer();
 
-	render();
+	/* Starting camera is ortographic top down camera */
+	currentCam = ortoCam;
+	render(currentCam);
 
 	window.addEventListener("keydown", onKeyDown);
 }
 
 function onKeyDown(e) {
 	switch(e.key) {
+		/* Top down camera */
 		case '1':
-			// Normal
-			cam1 = true;
-			cam2 = false;
-			cam3 = false;
-			followCamera.ball = null;
+			currentCam = ortoCam;
+			chaseCam.ball = null;
 			break;
+		/* Full view perspective camera */
 		case '2':
-			cam1 = false;
-			cam2 = true;
-			cam3 = false;
-			followCamera.ball = null;
+			currentCam = perspCam;
+			chaseCam.ball = null;
 			break;
+		/* Chase Camera */
 		case '3':
-			cam1 = false;
-			cam2 = false;
-			cam3 = true;
+			currentCam = chaseCam;
 			break;
 		case 'e':
 		case 'E':
