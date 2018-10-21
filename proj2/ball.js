@@ -45,7 +45,7 @@ class Ball extends THREE.Object3D {
 			});
 
 		this.sphere     = new THREE.Mesh(geometry, material);
-		this.axisHelper = new THREE.AxesHelper(50);
+		this.axisHelper = new THREE.AxesHelper(BALL_AXIS_SZ);
 
 		this.add(this.sphere);
 		this.add(this.axisHelper);
@@ -66,7 +66,7 @@ class Ball extends THREE.Object3D {
 
 		this.temppos.x += velx;
 		this.temppos.y += vely;
-		console.log(delta, velx, vely);
+		//console.log(delta, velx, vely);
 		this.rotateBall(delta);
 		this.collisionCheck(0, delta);
 	}
@@ -144,7 +144,7 @@ class Ball extends THREE.Object3D {
 		this.field.balls.forEach(ball => {
 			if (ball.position != this.position) {
 				if (ball.position.distanceTo(this.temppos) <= 2 * (this.rad + pad)) {
-					console.log("ball collision");
+					//console.log("ball collision");
 					
 					// m1 == m2
 					// v1f = (v1i * (m1 - m2) + 2 * v2i * m2)/(m1 + m2) <=> v1f = v2i
@@ -186,8 +186,8 @@ class Ball extends THREE.Object3D {
 	 * transd - translation distance to prevent ball from getting OOB
 	 */
 	collisionCheck(pad=0, transd=0) {
-		if (this.outOfBounds(pad))
-			console.log("out of bounds");
+		//if (this.outOfBounds(pad))
+		//	console.log("out of bounds");
 
 		if (!this.collisionCheckHeight(pad) && 
 			!this.collisionCheckWidth(pad) &&

@@ -40,7 +40,11 @@ function createScene() {
 	scene = new THREE.Scene();
 
 	// Add playfield to scene
-	field = new Playfield(300, 0x404040, 0x505050, 2);
+	field = new Playfield(
+		FIELD_WIDTH,
+		FIELD_ASPECT,
+		FIELD_GCOLOR,
+		FIELD_WCOLOR);
 
 	createAxes(25, -300, 100, 0);
 
@@ -49,8 +53,8 @@ function createScene() {
 	field.position.set(0, 0, 0);
 
 	// Add 10 balls to the field
-	for (let i = 0; i < 20; i++)
-		field.addBall(field.wallHeight() / 2, 0xFFFF00);
+	for (let i = 0; i < BALL_NUM; i++)
+		field.addBall(field.wallHeight() / 2, BALL_COLOR);
 
 	scene.add(field)
 }
@@ -62,27 +66,36 @@ function createOrtographicCamera() {
 	console.log("Width:", width);
 	console.log("Height:", height);
 
-	ortoCam = new THREE.OrthographicCamera(width / -2, width / 2, height / 2, height / -2, 10, 5000);
+	ortoCam = new THREE.OrthographicCamera(
+		ORTO_CAM_L,
+		ORTO_CAM_R,
+		ORTO_CAM_T,
+		ORTO_CAM_B,
+		ORTO_CAM_N,
+		ORTO_CAM_F);
 
-	// Normal
-	//ortoCam.position.set(500, 200, 500);
-	ortoCam.position.set(0, 500, 0);
+	ortoCam.position.set(ORTO_CAM_X, ORTO_CAM_Y, ORTO_CAM_Z);
 	ortoCam.lookAt(scene.position);
-	cam1 = true;
 }
 
 function createPerspectiveCamera() {
-	perspCam = new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 1, 1000);
+	perspCam = new THREE.PerspectiveCamera(
+		PERSP_CAM_FOVY,
+		PERSP_CAM_AR,
+		PERSP_CAM_N,
+		PERSP_CAM_F);
 
-	perspCam.position.set(400, 500, 0);
+	perspCam.position.set(PERSP_CAM_X, PERSP_CAM_Y, PERSP_CAM_Z);
 	perspCam.lookAt(scene.position);
-	cam2 = false;
 }
 
 function createChaseCamera() {
-	chaseCam = new chaseCamera(90, window.innerWidth / window.innerHeight, 1, 1000, field);
-	
-	cam3 = false;
+	chaseCam = new chaseCamera(
+		CHASE_CAM_FOVY,
+		CHASE_CAM_AR,
+		CHASE_CAM_N,
+		CHASE_CAM_F,
+		field);
 }
 
 function createClock() {
@@ -105,10 +118,10 @@ function updateVel() {
 	// Check if elapsed time is greater than refresh time
 	elapsed = now - then;
 	// Refresh time is in ms (10 seconds)
-	if (elapsed > 10*1000) {
+	if (elapsed > REFR_TIME) {
 		then = now;
 		// Increase velocity by 10
-		field.accelBalls(10);
+		field.accelBalls(REFR_INC);
 	}
 }
 

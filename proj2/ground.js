@@ -8,7 +8,7 @@ class Playfield extends THREE.Object3D {
 	 * wcolor - field wall color
 	 * aspect - field aspect ratio
 	 */
-	constructor(height, gcolor, wcolor, aspect) {
+	constructor(height, aspect, gcolor, wcolor) {
 		super()
 
 		this.height = height;
@@ -90,9 +90,9 @@ class Playfield extends THREE.Object3D {
 	}
 
 	/* Getters */
-	width()      { return this.width;     }
-	height()     { return this.height;    }
-	wallHeight() { return this.diag / 10; }
+	width()      { return this.width;  }
+	height()     { return this.height; }
+	wallHeight() { return this.diag / FIELD_WREL; }
 
 	randomBall() {
 		var length = this.balls.length;
@@ -134,7 +134,6 @@ class Playfield extends THREE.Object3D {
 		var vector = new THREE.Vector3(x, y, 0);
 
 		while (!this.isFreePosition(vector, rad)) {
-			console.log("not free");
 			x = Math.floor(Math.random() * (xMax - xMin + 1) + xMin);
 			y = Math.floor(Math.random() * (yMax - yMin + 1) + yMin);
 			vector.set(x, y, 0);
@@ -153,7 +152,7 @@ class Playfield extends THREE.Object3D {
 			color,
 			position.x,
 			position.y,
-			Math.floor(Math.random() * (120 - 20 + 1) + 100),
+			Math.floor(Math.random() * (BALL_MAXVEL - BALL_MINVEL + 1) + BALL_MINVEL),
 			Math.random() * 2*Math.PI);
 
 		this.add(ball);
