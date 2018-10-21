@@ -39,8 +39,8 @@ function createAxes(size, x, y, z) {
 function createScene() {
 	scene = new THREE.Scene();
 
-	var directionalLight = new THREE.DirectionalLight( 0xffffff, 0.6 );
-	directionalLight.position.set(200, 200, 100);
+	var spotLight = new THREE.SpotLight(0xffffff);
+	spotLight.position.set(0, 500, 0);
 
 	// Add playfield to scene
 	field = new Playfield(
@@ -60,7 +60,7 @@ function createScene() {
 		field.addBall(field.wallHeight() / 2, BALL_COLOR);
 
 	scene.add(field);
-	scene.add(directionalLight);
+	scene.add(spotLight);
 }
 
 function createOrtographicCamera() {
