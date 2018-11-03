@@ -56,6 +56,14 @@ function createScene() {
 	scene.add(airplane);
 	smooth = false;
 
+	scene.add(new Ground(
+		GROUND_WIDTH,
+		GROUND_HEIGHT,
+		GROUND_COLOR,
+		GROUND_POS_X,
+		GROUND_POS_Y,
+		GROUND_POS_Z));
+
 	addSpotlights();
 
 	//scene.add(new THREE.FaceNormalsHelper(airplane.body, 50, 0x00bb00, 2))
