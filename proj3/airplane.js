@@ -138,9 +138,7 @@ class Airplane extends THREE.Object3D {
 	}
 
 	compose(array, basic, lambert, phong) {
-		array.push(basic);
-		array.push(lambert);
-		array.push(phong);
+		array.push(basic, lambert, phong);
 	}
 
 	transmute(calc, smooth) {
