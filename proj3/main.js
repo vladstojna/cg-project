@@ -46,7 +46,7 @@ function createScene() {
 	// Add playfield to scene
 	plane = new Plane();
 
-	createAxes(200, 0, 100, 0);
+	//createAxes(200, 0, 100, 0);
 
 	// Ground the playfield
 	plane.position.set(0, 200, 0);
