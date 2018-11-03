@@ -13,6 +13,17 @@ var pitchDown;
 var moveForward;
 var moveBackward;
 
+var direclight;
+var spotlights;
+var dirstatus;
+var spot1status;
+var spot2status;
+var spot3status;
+var spot4status;
+
+var lightcalc;
+var shading;
+
 var width;
 var height;
 
@@ -36,8 +47,8 @@ function createAxes(size, x, y, z) {
 function createScene() {
 	scene = new THREE.Scene();
 
-	var spotlight = new THREE.SpotLight(0xffffff, 1, 0, Math.PI/2, 0, 2);
-	spotlight.position.set(200, 250, 200);
+	//var spotlight = new THREE.SpotLight(0xffffff, 1, 0, Math.PI/2, 0, 2);
+	//spotlight.position.set(200, 250, 200);
 
 	airplane = new Airplane(
 		PLANE_WIDTH,
@@ -52,7 +63,9 @@ function createScene() {
 		PLANE_DEPTH_SEGMENTS);
 	
 	scene.add(airplane);
-	scene.add(spotlight);
+	shading = true;
+	
+	//scene.add(spotlight);
 	//scene.add(new THREE.FaceNormalsHelper(airplane.body, 50, 0x00bb00, 2))
 	//scene.add(new THREE.VertexNormalsHelper(airplane.body, 50, 0xbbbbbb, 2))
 }
@@ -91,6 +104,13 @@ function createClock() {
 	clock = new THREE.Clock();
 }
 
+function createDirecLight() {
+	direclight = new DirecLight(200, 250, 200, true);
+	scene.add(direclight);
+	dirstatus = true;
+	lightcalc = true;
+}
+
 function scaleScene(h, hNew, w, wNew) {
 	var mult;
 
@@ -126,6 +146,10 @@ function animate() {
 	if (moveBackward)
 		airplane.translateZ(-300 * time);
 
+	airplane.transmute(lightcalc, shading);
+	
+	direclight.turn(dirstatus);
+
 	render(camera);
 	requestAnimationFrame(animate);
 }
@@ -140,7 +164,8 @@ function init() {
 	document.body.appendChild(renderer.domElement);
 
 	createScene();
-	createOrtographicCamera();
+	createPerspectiveCamera();
+	createDirecLight();
 	createClock();
 
 	//render(camera);
@@ -171,6 +196,19 @@ function onKeyDown(e) {
 		case 's':
 		case 'S':
 			moveBackward = true;
+			break;
+		case 'n':
+		case 'N':
+			dirstatus = !dirstatus;
+			break;
+		case 'l':
+		case 'L':
+			lightcalc = !lightcalc;
+			break;
+		case 'g':
+		case 'G':
+			shading = !shading;
+			break;
 	}
 
 }

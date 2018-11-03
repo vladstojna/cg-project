@@ -65,11 +65,44 @@ const PLANE_WIDTH_SEGMENTS  = 1;
 const PLANE_HEIGHT_SEGMENTS = 1;
 const PLANE_DEPTH_SEGMENTS  = 1;
 
+// Airplane materials
 const PLANE_MATERIAL_BASIC =
-	new THREE.MeshBasicMaterial({color: 0x597eba, wireframe: false});
+	new THREE.MeshBasicMaterial({color: 0xf5f6f6, wireframe: false});
 
 const PLANE_MATERIAL_LAMBERT =
-	new THREE.MeshLambertMaterial({color: 0x4d7551, wireframe: false});
+	new THREE.MeshLambertMaterial({color: 0xf5f6f6, wireframe: false});
 
 const PLANE_MATERIAL_PHONG =
-	new THREE.MeshPhongMaterial({color: 0x624d75, wireframe: false});
+	new THREE.MeshPhongMaterial({color: 0xf5f6f6, 
+								 specular: 0xe8e9e9, 
+								 shininess: 50, 
+								 wireframe: false});
+
+const WING_MATERIAL_BASIC =
+	new THREE.MeshBasicMaterial({color: 0xd0d1d1, wireframe: false});
+
+const WING_MATERIAL_LAMBERT =
+	new THREE.MeshLambertMaterial({color: 0xd0d1d1, wireframe: false});
+
+const WING_MATERIAL_PHONG =
+	new THREE.MeshPhongMaterial({color: 0xc0c1c1,
+								 specular: 0xb3b4b4,
+								 shininess: 15,
+								 wireframe: false});
+
+const COCKPIT_MATERIAL_BASIC =
+	new THREE.MeshBasicMaterial({color: 0x737373, wireframe: false});
+
+const COCKPIT_MATERIAL_LAMBERT =
+	new THREE.MeshLambertMaterial({color: 0x737373, 
+								   transparent: true,
+								   opacity: 0.5,
+								   wireframe: false});
+
+const COCKPIT_MATERIAL_PHONG =
+	new THREE.MeshPhongMaterial({color: 0x737373,
+								 specular: 0x636363,
+								 shininess: 10,
+								 transparent: true,
+								 opacity: 0.5,
+								 wireframe: false});
