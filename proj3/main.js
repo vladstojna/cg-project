@@ -74,24 +74,23 @@ function addSpotlights() {
 	var wrot = 0;
 	spotlights = new Array();
 
-	for(let i = 0; i < SPOT_NO; i++) {
-		var obj = new Spotlight(SPOT_X,
-			SPOT_Y,
-			SPOT_Z,
-			SPOT_RAD,
-			SPOT_HEIGHT,
-			SPOT_SEGS,
-			SPOT_SPHERE_RAD,
-			SPOT_SPHERE_SEGS,
-			SPOT_ROT,
+	for(let i = 0; i < SPOTLIGHT_NO; i++) {
+		var spotLight = new Spotlight(
+			SPOTLIGHT_X,
+			SPOTLIGHT_Y,
+			SPOTLIGHT_Z,
+			SPOTLIGHT_CONE_RAD,
+			SPOTLIGHT_CONE_HEIGHT,
+			SPOTLIGHT_CONE_SEGS,
+			SPOTLIGHT_BULB_RAD,
+			SPOTLIGHT_BULB_SEGS,
+			SPOTLIGHT_SELF_ROT,
 			wrot);
-
-		var spot = {object: obj, visibility: true};
 		
-		spotlights.push(spot);
-		scene.add(spot.object);
+		spotlights.push(spotLight);
+		scene.add(spotLight);
 		
-		wrot += SPOT_SCENE_ROT;
+		wrot += SPOTLIGHT_WORLD_ROT;
 	}
 }
 
@@ -151,16 +150,16 @@ function animate() {
 	airplane.transmute(lightcalc, smooth);
 	direclight.turn(dirstatus);
 
-	turnSpotlights();
+	toggleSpotlights();
 
 	render(camera);
 	requestAnimationFrame(animate);
 }
 
-function turnSpotlights() {
+function toggleSpotlights() {
 	spotlights.forEach(spot => {
-		spot.object.turn(spot.visibility);
-	})
+		spot.switchLight();
+	});
 }
 
 //------------------------------------------------------------------------------
@@ -211,16 +210,16 @@ function onKeyDown(e) {
 			smooth = !smooth;
 			break;
 		case '1':
-			spotlights[0].visibility = !spotlights[0].visibility;
+			spotlights[0].lit = !spotlights[0].lit;
 			break;
 		case '2':
-			spotlights[1].visibility = !spotlights[1].visibility;
+			spotlights[1].lit = !spotlights[1].lit;
 			break;
 		case '3':
-			spotlights[2].visibility = !spotlights[2].visibility;
+			spotlights[2].lit = !spotlights[2].lit;
 			break;
 		case '4':
-			spotlights[3].visibility = !spotlights[3].visibility;
+			spotlights[3].lit = !spotlights[3].lit;
 	}
 
 }
