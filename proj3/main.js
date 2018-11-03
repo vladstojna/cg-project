@@ -13,7 +13,6 @@ var pitchDown;
 
 var direclight;
 var spotlights;
-var dirstatus;
 
 var lightcalc;
 var smooth;
@@ -116,9 +115,13 @@ function createClock() {
 }
 
 function createDirecLight() {
-	direclight = new DirecLight(200, 250, 200, true);
+	direclight = new DirecLight(
+		DLIGHT_X,
+		DLIGHT_Y,
+		DLIGHT_Z,
+		DLIGHT_VISIB);
+
 	scene.add(direclight);
-	dirstatus = true;
 	lightcalc = true;
 }
 
@@ -148,7 +151,7 @@ function animate() {
 	rotatePlane(PLANE_ROTATION_VELOCITY);
 	
 	airplane.transmute(lightcalc, smooth);
-	direclight.turn(dirstatus);
+	direclight.switchLight();
 
 	toggleSpotlights();
 
@@ -199,7 +202,7 @@ function onKeyDown(e) {
 			break;
 		case 'n':
 		case 'N':
-			dirstatus = !dirstatus;
+			direclight.lit = !direclight.lit;
 			break;
 		case 'l':
 		case 'L':

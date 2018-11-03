@@ -5,10 +5,11 @@ class DirecLight extends THREE.DirectionalLight {
 
 		this.position.set(x, y, z);
 
-		this.turn(visibility);
+		this.lit     = visibility;
+		this.visible = visibility;
 	}
 
-	turn(visibility) {
-		this.visible = visibility;
+	switchLight() {
+		this.visible = this.lit;
 	}
 }

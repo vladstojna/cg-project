@@ -147,3 +147,12 @@ const SPOTLIGHT_LIGHT_PENBR = 0.5;
 const SPOTLIGHT_LIGHT_DECAY = 2;
 
 const SPOTLIGHT_START_STATE = true;
+
+// Directional light constants
+const DLIGHT_X = 200;
+const DLIGHT_Y = 250;
+const DLIGHT_Z = 200;
+
+const DLIGHT_VISIB = true;
+const DLIGHT_COLOR = 0xffffff;
+const DLIGHT_INT   = 1;
