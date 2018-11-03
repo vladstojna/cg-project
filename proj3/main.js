@@ -10,8 +10,6 @@ var rotateLeft;
 var rotateRight;
 var pitchUp;
 var pitchDown;
-var moveForward;
-var moveBackward;
 
 var direclight;
 var spotlights;
@@ -143,30 +141,25 @@ function scaleScene(h, hNew, w, wNew) {
 
 //------------------------------------------------------------------------------
 
-function animate() {
+function rotatePlane(radialSpeed) {
 	// Gets frametime
 	var time = clock.getDelta()
 
 	if (rotateLeft)
-		airplane.rotateY(Math.PI * time);
-
+		airplane.rotateY(radialSpeed * time);
 	if (rotateRight)
-		airplane.rotateY(-Math.PI * time);
-
+		airplane.rotateY(-radialSpeed * time);
 	if (pitchUp)
-		airplane.rotateX(-Math.PI * time);
-
+		airplane.rotateX(-radialSpeed * time);
 	if (pitchDown)
-		airplane.rotateX(Math.PI * time);
+		airplane.rotateX(radialSpeed * time);
+}
 
-	if (moveForward)
-		airplane.translateZ(300 * time);
+function animate() {
 
-	if (moveBackward)
-		airplane.translateZ(-300 * time);
-
-	airplane.transmute(lightcalc, smooth);
+	rotatePlane(PLANE_ROTATION_VELOCITY);
 	
+	airplane.transmute(lightcalc, smooth);
 	direclight.turn(dirstatus);
 
 	turnSpotlights();
