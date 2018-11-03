@@ -16,13 +16,9 @@ var moveBackward;
 var direclight;
 var spotlights;
 var dirstatus;
-var spot1status;
-var spot2status;
-var spot3status;
-var spot4status;
 
 var lightcalc;
-var shading;
+var smooth;
 
 var width;
 var height;
@@ -47,9 +43,6 @@ function createAxes(size, x, y, z) {
 function createScene() {
 	scene = new THREE.Scene();
 
-	//var spotlight = new THREE.SpotLight(0xffffff, 1, 0, Math.PI/2, 0, 2);
-	//spotlight.position.set(200, 250, 200);
-
 	airplane = new Airplane(
 		PLANE_WIDTH,
 		PLANE_HEIGHT,
@@ -63,11 +56,37 @@ function createScene() {
 		PLANE_DEPTH_SEGMENTS);
 	
 	scene.add(airplane);
-	shading = true;
-	
-	//scene.add(spotlight);
+	smooth = false;
+
+	addSpotlights();
+
 	//scene.add(new THREE.FaceNormalsHelper(airplane.body, 50, 0x00bb00, 2))
 	//scene.add(new THREE.VertexNormalsHelper(airplane.body, 50, 0xbbbbbb, 2))
+}
+
+function addSpotlights() {
+	var wrot = 0;
+	spotlights = new Array();
+
+	for(let i = 0; i < SPOT_NO; i++) {
+		var obj = new Spotlight(SPOT_X,
+			SPOT_Y,
+			SPOT_Z,
+			SPOT_RAD,
+			SPOT_HEIGHT,
+			SPOT_SEGS,
+			SPOT_SPHERE_RAD,
+			SPOT_SPHERE_SEGS,
+			SPOT_ROT,
+			wrot);
+
+		var spot = {object: obj, visibility: true};
+		
+		spotlights.push(spot);
+		scene.add(spot.object);
+		
+		wrot += SPOT_SCENE_ROT;
+	}
 }
 
 function createPerspectiveCamera() {
@@ -146,12 +165,20 @@ function animate() {
 	if (moveBackward)
 		airplane.translateZ(-300 * time);
 
-	airplane.transmute(lightcalc, shading);
+	airplane.transmute(lightcalc, smooth);
 	
 	direclight.turn(dirstatus);
 
+	turnSpotlights();
+
 	render(camera);
 	requestAnimationFrame(animate);
+}
+
+function turnSpotlights() {
+	spotlights.forEach(spot => {
+		spot.object.turn(spot.visibility);
+	})
 }
 
 //------------------------------------------------------------------------------
@@ -207,8 +234,19 @@ function onKeyDown(e) {
 			break;
 		case 'g':
 		case 'G':
-			shading = !shading;
+			smooth = !smooth;
 			break;
+		case '1':
+			spotlights[0].visibility = !spotlights[0].visibility;
+			break;
+		case '2':
+			spotlights[1].visibility = !spotlights[1].visibility;
+			break;
+		case '3':
+			spotlights[2].visibility = !spotlights[2].visibility;
+			break;
+		case '4':
+			spotlights[3].visibility = !spotlights[3].visibility;
 	}
 
 }

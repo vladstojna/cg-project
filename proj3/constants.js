@@ -33,10 +33,10 @@ const ORTO_CAM_Z = 500;
 const PERSP_CAM_FOVY = 90;
 const PERSP_CAM_AR   = window.innerWidth / window.innerHeight;
 const PERSP_CAM_N    = 1;
-const PERSP_CAM_F    = 1000;
+const PERSP_CAM_F    = 2000;
 const PERSP_CAM_X    = 400;
 const PERSP_CAM_Y    = 500;
-const PERSP_CAM_Z    = 0;
+const PERSP_CAM_Z    = 500;
 
 /* Airplane constants */
 const PLANE_WIDTH  = 75;
@@ -74,9 +74,9 @@ const PLANE_MATERIAL_LAMBERT =
 
 const PLANE_MATERIAL_PHONG =
 	new THREE.MeshPhongMaterial({color: 0xf5f6f6, 
-								 specular: 0xe8e9e9, 
-								 shininess: 50, 
-								 wireframe: false});
+		specular: 0xe8e9e9, 
+		shininess: 50, 
+		wireframe: false});
 
 const WING_MATERIAL_BASIC =
 	new THREE.MeshBasicMaterial({color: 0xd0d1d1, wireframe: false});
@@ -86,23 +86,36 @@ const WING_MATERIAL_LAMBERT =
 
 const WING_MATERIAL_PHONG =
 	new THREE.MeshPhongMaterial({color: 0xc0c1c1,
-								 specular: 0xb3b4b4,
-								 shininess: 15,
-								 wireframe: false});
+		specular: 0xb3b4b4,
+		shininess: 15,
+		wireframe: false});
 
 const COCKPIT_MATERIAL_BASIC =
 	new THREE.MeshBasicMaterial({color: 0x737373, wireframe: false});
 
 const COCKPIT_MATERIAL_LAMBERT =
 	new THREE.MeshLambertMaterial({color: 0x737373, 
-								   transparent: true,
-								   opacity: 0.5,
-								   wireframe: false});
+		transparent: true,
+		opacity: 0.5,
+		wireframe: false});
 
 const COCKPIT_MATERIAL_PHONG =
 	new THREE.MeshPhongMaterial({color: 0x737373,
-								 specular: 0x636363,
-								 shininess: 10,
-								 transparent: true,
-								 opacity: 0.5,
-								 wireframe: false});
+		specular: 0x636363,
+		shininess: 10,
+		transparent: true,
+		opacity: 0.5,
+		wireframe: false});
+
+// Spotlight constants
+const SPOT_X = PLANE_LENGTH*3/2;
+const SPOT_Y = PLANE_LENGTH*3/2;
+const SPOT_Z = PLANE_LENGTH*3/2;
+const SPOT_NO = 4;
+const SPOT_ROT = -Math.PI/4;
+const SPOT_SCENE_ROT = Math.PI/(SPOT_NO/2);
+const SPOT_SEGS = 16;
+const SPOT_HEIGHT = PLANE_HEIGHT + 50;
+const SPOT_RAD = PLANE_HEIGHT/2;
+const SPOT_SPHERE_RAD = SPOT_RAD*2/3;
+const SPOT_SPHERE_SEGS = 16;

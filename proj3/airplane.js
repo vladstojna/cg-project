@@ -12,12 +12,12 @@ class Airplane extends THREE.Object3D {
 
 		// Material array: Basic, Lambert, Phong
 		this.basicmaterial   = 0;
-		this.gouraudmaterial = 1;
+		this.lambertmaterial = 1;
 		this.phongmaterial   = 2;
 		// Initial material has phong shading
 		this.material        = 2;
 		// Initial light material has phong shading
-		this.ligthmaterial   = 2;
+		this.lightmaterial   = 2;
 
 		this.body = new THREE.Mesh(
 			new BoxGeometry(width, height, length, widthSegments, heightSegments, depthSegments),
@@ -143,19 +143,19 @@ class Airplane extends THREE.Object3D {
 			array.push(phong);
 		}
 
-		transmute(calc, shade) {
+		transmute(calc, smooth) {
 			// shade == true: material = phong
-			if (shade) {
-				this.ligthmaterial = this.phongmaterial;
+			if (!smooth) {
+				this.lightmaterial = this.phongmaterial;
 			}
 			// shade == false: material = lambert
 			else {
-				this.ligthmaterial = this.gouraudmaterial;
+				this.lightmaterial = this.lambertmaterial;
 			}
 				
 			// If light calcs are on and material is basic
 			if (calc && this.material != this.ligthmaterial) {
-				this.material = this.ligthmaterial;
+				this.material = this.lightmaterial;
 				this.changemat(this.material);
 			}
 			// If light calcs are off and material has shading
