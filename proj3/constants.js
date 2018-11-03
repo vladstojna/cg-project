@@ -75,14 +75,14 @@ const PLANE_MATERIAL_LAMBERT =
 const PLANE_MATERIAL_PHONG =
 	new THREE.MeshPhongMaterial({color: 0xf5f6f6, 
 		specular: 0xe8e9e9, 
-		shininess: 50, 
+		shininess: 30, 
 		wireframe: false});
 
 const WING_MATERIAL_BASIC =
-	new THREE.MeshBasicMaterial({color: 0xd0d1d1, wireframe: false});
+	new THREE.MeshBasicMaterial({color: 0xc0c1c1, wireframe: false});
 
 const WING_MATERIAL_LAMBERT =
-	new THREE.MeshLambertMaterial({color: 0xd0d1d1, wireframe: false});
+	new THREE.MeshLambertMaterial({color: 0xc0c1c1, wireframe: false});
 
 const WING_MATERIAL_PHONG =
 	new THREE.MeshPhongMaterial({color: 0xc0c1c1,
@@ -105,6 +105,30 @@ const COCKPIT_MATERIAL_PHONG =
 		shininess: 10,
 		transparent: true,
 		opacity: 0.5,
+		wireframe: false});
+
+const AFTERBURNER_MATERIAL_BASIC =
+	new THREE.MeshBasicMaterial({color: 0x737373, wireframe: false});
+
+const AFTERBURNER_MATERIAL_LAMBERT =
+	new THREE.MeshLambertMaterial({color: 0x737373, wireframe: false});
+
+const AFTERBURNER_MATERIAL_PHONG = 
+	new THREE.MeshPhongMaterial({color: 0x000000,
+		specular: 0xa5a5a5,
+		shininess: 3,
+		wireframe: false});
+
+const LEVEL1_MATERIAL_BASIC =
+	new THREE.MeshBasicMaterial({color: 0xfbcf9a, wireframe: false});
+
+const LEVEL1_MATERIAL_LAMBERT =
+	new THREE.MeshLambertMaterial({color: 0xfbcf9a, wireframe: false});
+
+const LEVEL1_MATERIAL_PHONG =
+	new THREE.MeshPhongMaterial({color: 0xf8b83c,
+		specular: 0xb86f3c,
+		shininess: 1,
 		wireframe: false});
 
 // Spotlight constants

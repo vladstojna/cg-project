@@ -82,9 +82,9 @@ class Airplane extends THREE.Object3D {
 			material);
 
 		afterburner.materials = new Array();
-		this.compose(afterburner.materials, PLANE_MATERIAL_BASIC, PLANE_MATERIAL_LAMBERT, PLANE_MATERIAL_PHONG);
+		this.compose(afterburner.materials, AFTERBURNER_MATERIAL_BASIC, AFTERBURNER_MATERIAL_LAMBERT, AFTERBURNER_MATERIAL_PHONG);
 		afterburnerLevel1.materials = new Array();
-		this.compose(afterburnerLevel1.materials, PLANE_MATERIAL_BASIC, PLANE_MATERIAL_LAMBERT, PLANE_MATERIAL_PHONG);
+		this.compose(afterburnerLevel1.materials, LEVEL1_MATERIAL_BASIC, LEVEL1_MATERIAL_LAMBERT, LEVEL1_MATERIAL_PHONG);
 
 		this.body.add(afterburner);
 		this.body.add(afterburnerLevel1);
