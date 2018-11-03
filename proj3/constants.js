@@ -38,8 +38,38 @@ const PERSP_CAM_X    = 400;
 const PERSP_CAM_Y    = 500;
 const PERSP_CAM_Z    = 0;
 
-/* Plane size constant*/
-const PLANE_FUSELAGE_HEIGHT = 90;
-const PLANE_FUSELAGE_WIDTH = 90;
+/* Airplane constants */
+const PLANE_WIDTH  = 75;
+const PLANE_HEIGHT = 50;
+const PLANE_LENGTH = 300;
 
-const Framewire=true;
+const PLANE_WING_WIDTH_DIV  = 2;
+const PLANE_WING_WIDTH      = PLANE_LENGTH / PLANE_WING_WIDTH_DIV;
+const PLANE_WING_HEIGHT_DIV = 10;
+const PLANE_WING_HEIGHT     = PLANE_HEIGHT / PLANE_WING_HEIGHT_DIV;
+const PLANE_WING_SPAN       = PLANE_LENGTH;
+
+const PLANE_STABILIZER_WIDTH  = PLANE_WIDTH  / 2;
+const PLANE_STABILIZER_HEIGHT = PLANE_HEIGHT / 10;
+const PLANE_STABILIZER_LENGTH = PLANE_HEIGHT / 2;
+
+const PLANE_COCKPIT_WIDTH  = PLANE_WIDTH;
+const PLANE_COCKPIT_HEIGHT = PLANE_HEIGHT;
+const PLANE_COCKPIT_LENGTH = PLANE_LENGTH / 4;
+
+const PLANE_AFTERBURNER_WIDTH  = PLANE_WIDTH  / 2;
+const PLANE_AFTERBURNER_HEIGHT = PLANE_HEIGHT / 2;
+const PLANE_AFTERBURNER_LENGTH = PLANE_LENGTH / 16;
+
+const PLANE_WIDTH_SEGMENTS  = 1;
+const PLANE_HEIGHT_SEGMENTS = 1;
+const PLANE_DEPTH_SEGMENTS  = 1;
+
+const PLANE_MATERIAL_BASIC =
+	new THREE.MeshBasicMaterial({color: 0x597eba, wireframe: false});
+
+const PLANE_MATERIAL_LAMBERT =
+	new THREE.MeshLambertMaterial({color: 0x4d7551, wireframe: false});
+
+const PLANE_MATERIAL_PHONG =
+	new THREE.MeshPhongMaterial({color: 0x624d75, wireframe: false});

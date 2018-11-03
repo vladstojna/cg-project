@@ -1,25 +1,21 @@
 // Main
 
-// Import other classes and functions
-//------------------------------------------------------------------------------
-//import Ground from "./ground.js"
-//------------------------------------------------------------------------------
-
 var scene;
-var ortoCam;
-var perspCam;
-var chaseCam;
+var camera;
 var clock;
-var then;
-var plane;
-var currentCam;
 
-var field;
-var ball = null;
+var airplane
 
-var showAxes = true;
+var rotateLeft;
+var rotateRight;
+var pitchUp;
+var pitchDown;
+var moveForward;
+var moveBackward;
 
-var rotateLeft = false, rotateRight = false, rotateDown=false, rotateUp=false;
+var width;
+var height;
+
 //------------------------------------------------------------------------------
 
 function render(cam) {
@@ -40,19 +36,36 @@ function createAxes(size, x, y, z) {
 function createScene() {
 	scene = new THREE.Scene();
 
-	var spotLight = new THREE.SpotLight(0xffffff);
-	spotLight.position.set(0, 500, 0);
+	var spotlight = new THREE.SpotLight(0xffffff, 1, 0, Math.PI/2, 0, 2);
+	spotlight.position.set(200, 250, 200);
 
-	// Add playfield to scene
-	plane = new Plane();
+	airplane = new Airplane(
+		PLANE_WIDTH,
+		PLANE_HEIGHT,
+		PLANE_LENGTH,
+		PLANE_WING_SPAN,
+		PLANE_STABILIZER_WIDTH,
+		PLANE_COCKPIT_LENGTH,
+		PLANE_AFTERBURNER_HEIGHT,
+		PLANE_WIDTH_SEGMENTS,
+		PLANE_HEIGHT_SEGMENTS,
+		PLANE_DEPTH_SEGMENTS);
+	
+	scene.add(airplane);
+	scene.add(spotlight);
+	//scene.add(new THREE.FaceNormalsHelper(airplane.body, 50, 0x00bb00, 2))
+	//scene.add(new THREE.VertexNormalsHelper(airplane.body, 50, 0xbbbbbb, 2))
+}
 
-	//createAxes(200, 0, 100, 0);
+function createPerspectiveCamera() {
+	camera = new THREE.PerspectiveCamera(
+		PERSP_CAM_FOVY,
+		PERSP_CAM_AR,
+		PERSP_CAM_N,
+		PERSP_CAM_F);
 
-	// Ground the playfield
-	plane.position.set(0, 200, 0);
-
-	scene.add(plane);
-	scene.add(spotLight);
+	camera.position.set(PERSP_CAM_X, PERSP_CAM_Y, PERSP_CAM_Z);
+	camera.lookAt(scene.position);
 }
 
 function createOrtographicCamera() {
@@ -62,7 +75,7 @@ function createOrtographicCamera() {
 	console.log("Width:", width);
 	console.log("Height:", height);
 
-	ortoCam = new THREE.OrthographicCamera(
+	camera = new THREE.OrthographicCamera(
 		ORTO_CAM_L,
 		ORTO_CAM_R,
 		ORTO_CAM_T,
@@ -70,51 +83,50 @@ function createOrtographicCamera() {
 		ORTO_CAM_N,
 		ORTO_CAM_F);
 
-	ortoCam.position.set(ORTO_CAM_X, ORTO_CAM_Y, ORTO_CAM_Z);
-	ortoCam.lookAt(scene.position);
-}
-
-function createPerspectiveCamera() {
-	perspCam = new THREE.PerspectiveCamera(
-		PERSP_CAM_FOVY,
-		PERSP_CAM_AR,
-		PERSP_CAM_N,
-		PERSP_CAM_F);
-
-	perspCam.position.set(PERSP_CAM_X, PERSP_CAM_Y, PERSP_CAM_Z);
-	perspCam.lookAt(scene.position);
+	camera.position.set(ORTO_CAM_X, ORTO_CAM_Y, ORTO_CAM_Z);
+	camera.lookAt(scene.position);
 }
 
 function createClock() {
 	clock = new THREE.Clock();
 }
-function updatePlanePos(Xrot,Yrot,Zrot){
-	var time = clock.getDelta()
-	if(rotateLeft==true){
-		plane.rotateY(Math.PI*time);
-		rotateLeft=false;
-	}
-	if(rotateRight==true){
-		plane.rotateY(-Math.PI*time);
-		rotateRight=false;
-	}
-	if(rotateUp==true){
-		plane.rotateZ(Math.PI*time);
-		rotateUp=false;
-	}
-	if(rotateDown==true){
-		plane.rotateZ(-Math.PI*time);
-		rotateDown=false;
-	}
+
+function scaleScene(h, hNew, w, wNew) {
+	var mult;
+
+	if (hNew <= wNew)
+		mult = hNew / h
+	else
+		mult = wNew / w
+
+	scene.scale.set(mult, mult, mult);
 }
 
 //------------------------------------------------------------------------------
 
-
 function animate() {
-	render(currentCam);
-	updatePlanePos()
+	// Gets frametime
+	var time = clock.getDelta()
 
+	if (rotateLeft)
+		airplane.rotateY(Math.PI * time);
+
+	if (rotateRight)
+		airplane.rotateY(-Math.PI * time);
+
+	if (pitchUp)
+		airplane.rotateX(-Math.PI * time);
+
+	if (pitchDown)
+		airplane.rotateX(Math.PI * time);
+
+	if (moveForward)
+		airplane.translateZ(300 * time);
+
+	if (moveBackward)
+		airplane.translateZ(-300 * time);
+
+	render(camera);
 	requestAnimationFrame(animate);
 }
 
@@ -129,44 +141,76 @@ function init() {
 
 	createScene();
 	createOrtographicCamera();
-	createPerspectiveCamera();
 	createClock();
-	
-	/* Starting camera is ortographic top down camera */
-	currentCam = ortoCam;
-	render(currentCam);
+
+	//render(camera);
 
 	window.addEventListener("keydown", onKeyDown);
+	window.addEventListener("keyup",   onKeyUp);
+	window.addEventListener("resize",  onResize);
 }
 
 function onKeyDown(e) {
 	switch(e.key) {
-		/* Top down camera */
-		case '1':
-			currentCam = ortoCam;
-			chaseCam.ball = null;
-			break;
-		/* Full view perspective camera */
-		case '2':
-			currentCam = perspCam;
-			break;
-		/* Chase Camera */
-		case 'e':
-		case 'E':
-			showAxes = !showAxes;
-			break;
 		case 'ArrowLeft':
-			rotateLeft=true;
+			rotateLeft = true;
 			break;
 		case 'ArrowRight':
-			rotateRight=true;
-		break;
+			rotateRight = true;
+			break;
 		case 'ArrowUp':
-			rotateUp=true;
-		break;
+			pitchUp = true;
+			break;
 		case 'ArrowDown':
-			rotateDown=true;
-		break;
+			pitchDown = true;
+			break;
+		case 'w':
+		case 'W':
+			moveForward = true;
+			break;
+		case 's':
+		case 'S':
+			moveBackward = true;
+	}
 
+}
+
+function onKeyUp(e) {
+	switch(e.key) {
+		case 'ArrowLeft':
+			rotateLeft = false;
+			break;
+		case 'ArrowRight':
+			rotateRight = false;
+			break;
+		case 'ArrowUp':
+			pitchUp = false;
+			break;
+		case 'ArrowDown':
+			pitchDown = false;
+			break;
+		case 'w':
+		case 'W':
+			moveForward = false;
+			break;
+		case 's':
+		case 'S':
+			moveBackward = false;
+	}
+}
+
+function onResize() {
+	renderer.setSize(window.innerWidth, window.innerHeight);
+
+	if (window.innerWidth > 0 && window.innerHeight > 0) {
+
+		camera.left   = renderer.getSize().width  / -2;
+		camera.right  = renderer.getSize().width  /  2;
+		camera.top    = renderer.getSize().height /  2;
+		camera.bottom = renderer.getSize().height / -2;
+
+		scaleScene(height, window.innerHeight, width, window.innerWidth);
+
+		camera.updateProjectionMatrix();
 	}
 }
