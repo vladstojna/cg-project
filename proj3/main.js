@@ -216,14 +216,6 @@ function onKeyDown(e) {
 		case 'ArrowDown':
 			pitchDown = true;
 			break;
-		case 'w':
-		case 'W':
-			moveForward = true;
-			break;
-		case 's':
-		case 'S':
-			moveBackward = true;
-			break;
 		case 'n':
 		case 'N':
 			dirstatus = !dirstatus;
@@ -265,13 +257,6 @@ function onKeyUp(e) {
 		case 'ArrowDown':
 			pitchDown = false;
 			break;
-		case 'w':
-		case 'W':
-			moveForward = false;
-			break;
-		case 's':
-		case 'S':
-			moveBackward = false;
 	}
 }
 
