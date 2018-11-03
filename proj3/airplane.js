@@ -135,40 +135,40 @@ class Airplane extends THREE.Object3D {
 		this.body.add(cockpit);
 
 		cockpit.position.z += length/2 + cockpitLength/2;
-		}
+	}
 
-		compose(array, basic, lambert, phong) {
-			array.push(basic);
-			array.push(lambert);
-			array.push(phong);
-		}
+	compose(array, basic, lambert, phong) {
+		array.push(basic);
+		array.push(lambert);
+		array.push(phong);
+	}
 
-		transmute(calc, smooth) {
-			// shade == true: material = phong
-			if (!smooth) {
-				this.lightmaterial = this.phongmaterial;
-			}
-			// shade == false: material = lambert
-			else {
-				this.lightmaterial = this.lambertmaterial;
-			}
-				
-			// If light calcs are on and material is basic
-			if (calc && this.material != this.ligthmaterial) {
-				this.material = this.lightmaterial;
-				this.changemat(this.material);
-			}
-			// If light calcs are off and material has shading
-			else if (!calc && this.material != this.basicmaterial) {
-				this.material = this.basicmaterial;
-				this.changemat(this.material);
-			}
+	transmute(calc, smooth) {
+		// shade == true: material = phong
+		if (!smooth) {
+			this.lightmaterial = this.phongmaterial;
 		}
+		// shade == false: material = lambert
+		else {
+			this.lightmaterial = this.lambertmaterial;
+		}
+			
+		// If light calcs are on and material is basic
+		if (calc && this.material != this.ligthmaterial) {
+			this.material = this.lightmaterial;
+			this.changemat(this.material);
+		}
+		// If light calcs are off and material has shading
+		else if (!calc && this.material != this.basicmaterial) {
+			this.material = this.basicmaterial;
+			this.changemat(this.material);
+		}
+	}
 
-		changemat(i) {
-			this.body.material = this.body.materials[i];
-			this.body.children.forEach(mesh => {
-				mesh.material = mesh.materials[i];
-			})
-		}
+	changemat(i) {
+		this.body.material = this.body.materials[i];
+		this.body.children.forEach(mesh => {
+			mesh.material = mesh.materials[i];
+		})
+	}
 }
