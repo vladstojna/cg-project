@@ -65,6 +65,8 @@ const PLANE_WIDTH_SEGMENTS  = 1;
 const PLANE_HEIGHT_SEGMENTS = 1;
 const PLANE_DEPTH_SEGMENTS  = 1;
 
+const PLANE_ROTATION_VELOCITY = Math.PI/2;
+
 // Airplane materials
 const PLANE_MATERIAL_BASIC =
 	new THREE.MeshBasicMaterial({color: 0xf5f6f6, wireframe: false});
