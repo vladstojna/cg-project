@@ -38,6 +38,14 @@ const PERSP_CAM_X    = 400;
 const PERSP_CAM_Y    = 500;
 const PERSP_CAM_Z    = 500;
 
+/* Ground constants */
+const GROUND_WIDTH  = 4000;
+const GROUND_HEIGHT = 4000;
+const GROUND_COLOR  = 0x0e2d11 // dark green
+const GROUND_POS_X  = 0;
+const GROUND_POS_Y  = -200;
+const GROUND_POS_Z  = 0;
+
 /* Airplane constants */
 const PLANE_WIDTH  = 75;
 const PLANE_HEIGHT = 50;
