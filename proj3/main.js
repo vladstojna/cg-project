@@ -96,6 +96,12 @@ function addSpotlights() {
 }
 
 function createPerspectiveCamera() {
+	width  = window.innerWidth;
+	height = window.innerHeight;
+
+	console.log("Width:", width);
+	console.log("Height:", height);
+
 	camera = new THREE.PerspectiveCamera(
 		PERSP_CAM_FOVY,
 		PERSP_CAM_AR,
@@ -103,25 +109,6 @@ function createPerspectiveCamera() {
 		PERSP_CAM_F);
 
 	camera.position.set(PERSP_CAM_X, PERSP_CAM_Y, PERSP_CAM_Z);
-	camera.lookAt(scene.position);
-}
-
-function createOrtographicCamera() {
-	width  = window.innerWidth;
-	height = window.innerHeight;
-
-	console.log("Width:", width);
-	console.log("Height:", height);
-
-	camera = new THREE.OrthographicCamera(
-		ORTO_CAM_L,
-		ORTO_CAM_R,
-		ORTO_CAM_T,
-		ORTO_CAM_B,
-		ORTO_CAM_N,
-		ORTO_CAM_F);
-
-	camera.position.set(ORTO_CAM_X, ORTO_CAM_Y, ORTO_CAM_Z);
 	camera.lookAt(scene.position);
 }
 
@@ -136,14 +123,8 @@ function createDirecLight() {
 	lightcalc = true;
 }
 
-function scaleScene(h, hNew, w, wNew) {
-	var mult;
-
-	if (hNew <= wNew)
-		mult = hNew / h
-	else
-		mult = wNew / w
-
+function scaleScene(oldSize, newSize) {
+	var mult = newSize / oldSize;
 	scene.scale.set(mult, mult, mult);
 }
 
@@ -266,13 +247,9 @@ function onResize() {
 
 	if (window.innerWidth > 0 && window.innerHeight > 0) {
 
-		camera.left   = renderer.getSize().width  / -2;
-		camera.right  = renderer.getSize().width  /  2;
-		camera.top    = renderer.getSize().height /  2;
-		camera.bottom = renderer.getSize().height / -2;
-
-		scaleScene(height, window.innerHeight, width, window.innerWidth);
-
+		camera.aspect = window.innerWidth / window.innerHeight;
 		camera.updateProjectionMatrix();
+
+		scaleScene(height*width, window.innerHeight*window.innerWidth);
 	}
 }

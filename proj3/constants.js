@@ -1,26 +1,5 @@
 // List of constants
 
-/* Ortographic camera constants constants
- * ORTO_CAM_L - ortographic camera left
- * ORTO_CAM_R - ortographic camera right
- * ORTO_CAM_T - ortographic camera top
- * ORTO_CAM_B - ortographic camera bottom
- * ORTO_CAM_N - ortographic camera near
- * ORTO_CAM_F - ortographic camera far
- * ORTO_CAM_X - ortographic camera x position
- * ORTO_CAM_Y - ortographic camera y position
- * ORTO_CAM_Z - ortographic camera z position
- */
-const ORTO_CAM_L = window.innerWidth  / -2;
-const ORTO_CAM_R = window.innerWidth  /  2;
-const ORTO_CAM_T = window.innerHeight /  2;
-const ORTO_CAM_B = window.innerHeight / -2;
-const ORTO_CAM_N = 10;
-const ORTO_CAM_F = 5000;
-const ORTO_CAM_X = 500;
-const ORTO_CAM_Y = 600;
-const ORTO_CAM_Z = 500;
-
 /* Perspective camera constants constants
  * PERSP_CAM_FOVY - perspective camera vertical fov
  * PERSP_CAM_AR   - perspective camera aspect ratio
