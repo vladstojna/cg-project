@@ -8,40 +8,52 @@ class Airplane extends THREE.Object3D {
 
 		super();
 
-		var material = PLANE_MATERIAL_PHONG;
-
 		// Material array: Basic, Lambert, Phong
-		this.basicmaterial   = 0;
-		this.lambertmaterial = 1;
-		this.phongmaterial   = 2;
+		this.indexBasicMaterial   = 0;
+		this.indexLambertMaterial = 1;
+		this.indexPhongMaterial   = 2;
 		// Initial material has phong shading
-		this.material        = 2;
-		// Initial light material has phong shading
-		this.lightmaterial   = 2;
+		// Initial shaded material has phong shading
+		this.indexMaterial       = this.indexPhongMaterial;
+		this.indexShadedMaterial = this.indexPhongMaterial;
+
+		/* Body */
+		/* ------------------------------------------------------------- */
 
 		this.body = new THREE.Mesh(
-			new BoxGeometry(width, height, length, widthSegments, heightSegments, depthSegments),
-			material);
+			new BoxGeometry(width, height, length,
+				widthSegments, heightSegments, depthSegments),
+			PLANE_MATERIAL_BODY_PHONG);
 
-		this.body.materials = new Array();
-		this.compose(this.body.materials, PLANE_MATERIAL_BASIC, PLANE_MATERIAL_LAMBERT, PLANE_MATERIAL_PHONG);
+		this.compose(this.body,
+			PLANE_MATERIAL_BODY_BASIC,
+			PLANE_MATERIAL_BODY_LAMBERT,
+			PLANE_MATERIAL_BODY_PHONG);
 
 		this.add(this.body);
+
+		/* Stabilizers */
+		/* ------------------------------------------------------------- */
 
 		var leftStabilizer = new THREE.Mesh(
 			new StabilizerGeometry(height/10, stabilizerSize, stabilizerSize,
 				widthSegments, heightSegments, depthSegments),
-			material);
+			PLANE_MATERIAL_WING_PHONG);
 
 		var rightStabilizer = new THREE.Mesh(
 			new StabilizerGeometry(height/10, stabilizerSize, stabilizerSize,
 				widthSegments, heightSegments, depthSegments),
-			material);
+			PLANE_MATERIAL_WING_PHONG);
 
-		leftStabilizer.materials = new Array();
-		this.compose(leftStabilizer.materials, PLANE_MATERIAL_BASIC, PLANE_MATERIAL_LAMBERT, PLANE_MATERIAL_PHONG);
-		rightStabilizer.materials = new Array();
-		this.compose(rightStabilizer.materials, PLANE_MATERIAL_BASIC, PLANE_MATERIAL_LAMBERT, PLANE_MATERIAL_PHONG);
+		this.compose(leftStabilizer,
+			PLANE_MATERIAL_WING_BASIC,
+			PLANE_MATERIAL_WING_LAMBERT,
+			PLANE_MATERIAL_WING_PHONG);
+
+		this.compose(rightStabilizer,
+			PLANE_MATERIAL_WING_BASIC,
+			PLANE_MATERIAL_WING_LAMBERT,
+			PLANE_MATERIAL_WING_PHONG);
 
 		this.body.add(leftStabilizer);
 		this.body.add(rightStabilizer);
@@ -60,10 +72,12 @@ class Airplane extends THREE.Object3D {
 		var topStabilizer = new THREE.Mesh(
 			new StabilizerGeometry(height/10, stabilizerSize, stabilizerSize,
 				widthSegments, heightSegments, depthSegments),
-			material);
+			PLANE_MATERIAL_WING_PHONG);
 
-		topStabilizer.materials = new Array();
-		this.compose(topStabilizer.materials, PLANE_MATERIAL_BASIC, PLANE_MATERIAL_LAMBERT, PLANE_MATERIAL_PHONG);
+		this.compose(topStabilizer,
+			PLANE_MATERIAL_WING_BASIC,
+			PLANE_MATERIAL_WING_LAMBERT,
+			PLANE_MATERIAL_WING_PHONG);
 
 		this.body.add(topStabilizer);
 
@@ -71,20 +85,27 @@ class Airplane extends THREE.Object3D {
 		topStabilizer.position.z -= length/2 - stabilizerSize/2;
 		topStabilizer.position.y += height/2 + stabilizerSize/2;
 
+		/* Afterburner */
+		/* ------------------------------------------------------------- */
+
 		var afterburner = new THREE.Mesh(
 			new AfterburnerGeometry(width/2, height/2, afterburnerLength,
 				widthSegments, heightSegments, depthSegments),
-			material);
+			PLANE_MATERIAL_AFTERBURNER_PHONG);
 
 		var afterburnerLevel1 = new THREE.Mesh(
 			new AfterburnerGeometry(width/4, height/4, afterburnerLength/2,
 				widthSegments, heightSegments, depthSegments),
-			material);
+			PLANE_MATERIAL_AB_TIP_PHONG);
 
-		afterburner.materials = new Array();
-		this.compose(afterburner.materials, AFTERBURNER_MATERIAL_BASIC, AFTERBURNER_MATERIAL_LAMBERT, AFTERBURNER_MATERIAL_PHONG);
-		afterburnerLevel1.materials = new Array();
-		this.compose(afterburnerLevel1.materials, LEVEL1_MATERIAL_BASIC, LEVEL1_MATERIAL_LAMBERT, LEVEL1_MATERIAL_PHONG);
+		this.compose(afterburner,
+			PLANE_MATERIAL_AFTERBURNER_BASIC,
+			PLANE_MATERIAL_AFTERBURNER_LAMBERT,
+			PLANE_MATERIAL_AFTERBURNER_PHONG);
+		this.compose(afterburnerLevel1,
+			PLANE_MATERIAL_AB_TIP_BASIC,
+			PLANE_MATERIAL_AB_TIP_LAMBERT,
+			PLANE_MATERIAL_AB_TIP_PHONG);
 
 		this.body.add(afterburner);
 		this.body.add(afterburnerLevel1);
@@ -92,22 +113,27 @@ class Airplane extends THREE.Object3D {
 		afterburner.position.z -= length/2 + afterburnerLength/2;
 		afterburnerLevel1.position.z -= length/2 + afterburnerLength + afterburnerLength/4;
 
-		material = WING_MATERIAL_PHONG;
+		/* Wings */
+		/* ------------------------------------------------------------- */
 
 		var leftWing = new THREE.Mesh(
 			new WingGeometry(height/10, length/2, wingSpan,
 				widthSegments, heightSegments, depthSegments),
-			material);
+			PLANE_MATERIAL_WING_PHONG);
 
 		var rightWing = new THREE.Mesh(
 			new WingGeometry(height/10, length/2, wingSpan,
 				widthSegments, heightSegments, depthSegments),
-			material);
+			PLANE_MATERIAL_WING_PHONG);
 
-		leftWing.materials = new Array();
-		this.compose(leftWing.materials, WING_MATERIAL_BASIC, WING_MATERIAL_LAMBERT, WING_MATERIAL_PHONG);
-		rightWing.materials = new Array();
-		this.compose(rightWing.materials, WING_MATERIAL_BASIC, WING_MATERIAL_LAMBERT, WING_MATERIAL_PHONG);
+		this.compose(leftWing,
+			PLANE_MATERIAL_WING_BASIC,
+			PLANE_MATERIAL_WING_LAMBERT,
+			PLANE_MATERIAL_WING_PHONG);
+		this.compose(rightWing,
+			PLANE_MATERIAL_WING_BASIC,
+			PLANE_MATERIAL_WING_LAMBERT,
+			PLANE_MATERIAL_WING_PHONG);
 
 		this.body.add(leftWing);
 		this.body.add(rightWing);
@@ -122,51 +148,56 @@ class Airplane extends THREE.Object3D {
 		rightWing.rotation.y = Math.PI/2;
 		rightWing.position.x += wingSpan/2 + width/2;
 
-		material = COCKPIT_MATERIAL_PHONG;
+		/* Cockpit */
+		/* ------------------------------------------------------------- */
 
 		var cockpit = new THREE.Mesh(
 			new CockpitGeometry(width, height, cockpitLength,
 				widthSegments, heightSegments, depthSegments),
-			material);
+			PLANE_MATERIAL_COCKPIT_PHONG);
 
-		cockpit.materials = new Array();
-		this.compose(cockpit.materials, COCKPIT_MATERIAL_BASIC, COCKPIT_MATERIAL_LAMBERT, COCKPIT_MATERIAL_PHONG);
+		this.compose(cockpit,
+			PLANE_MATERIAL_COCKPIT_BASIC,
+			PLANE_MATERIAL_COCKPIT_LAMBERT,
+			PLANE_MATERIAL_COCKPIT_PHONG);
 
 		this.body.add(cockpit);
 
 		cockpit.position.z += length/2 + cockpitLength/2;
 	}
 
-	compose(array, basic, lambert, phong) {
-		array.push(basic, lambert, phong);
+	/* compose: generate array of materials of a mesh */
+	compose(mesh, basic, lambert, phong) {
+		mesh.materialArray = new Array();
+		mesh.materialArray.push(basic, lambert, phong);
 	}
 
-	transmute(calc, smooth) {
-		// shade == true: material = phong
-		if (!smooth) {
-			this.lightmaterial = this.phongmaterial;
+	/* transmute: compute new airplane material */
+	transmute(calc, diffuse) {
+		// diffuse == true: material = lambert
+		if (diffuse)
+			this.indexShadedMaterial = this.indexLambertMaterial;
+		// diffuse == false: material = phong
+		else
+			this.indexShadedMaterial = this.indexPhongMaterial;
+
+		// If shading is computed and material is basic
+		if (calc && this.indexMaterial != this.indexShadedMaterial) {
+			this.indexMaterial = this.indexShadedMaterial;
+			this.changemat(this.indexMaterial);
 		}
-		// shade == false: material = lambert
-		else {
-			this.lightmaterial = this.lambertmaterial;
-		}
-			
-		// If light calcs are on and material is basic
-		if (calc && this.material != this.ligthmaterial) {
-			this.material = this.lightmaterial;
-			this.changemat(this.material);
-		}
-		// If light calcs are off and material has shading
-		else if (!calc && this.material != this.basicmaterial) {
-			this.material = this.basicmaterial;
-			this.changemat(this.material);
+		// If shading is not computed and material is basic
+		else if (!calc && this.indexMaterial != this.indexBasicMaterial) {
+			this.indexMaterial = this.indexBasicMaterial;
+			this.changemat(this.indexMaterial);
 		}
 	}
 
+	/* changemat: change material of all meshes */
 	changemat(i) {
-		this.body.material = this.body.materials[i];
+		this.body.material = this.body.materialArray[i];
 		this.body.children.forEach(mesh => {
-			mesh.material = mesh.materials[i];
-		})
+			mesh.material = mesh.materialArray[i];
+		});
 	}
 }

@@ -14,8 +14,8 @@ var pitchDown;
 var direclight;
 var spotlights;
 
-var lightcalc;
-var smooth;
+var shaderComputeFlag;
+var diffuseMaterialFlag;
 
 var width;
 var height;
@@ -53,7 +53,7 @@ function createScene() {
 		PLANE_DEPTH_SEGMENTS);
 	
 	scene.add(airplane);
-	smooth = false;
+	diffuseMaterialFlag = false;
 
 	scene.add(new Ground(
 		GROUND_WIDTH,
@@ -122,7 +122,7 @@ function createDirecLight() {
 		DLIGHT_VISIB);
 
 	scene.add(direclight);
-	lightcalc = true;
+	shaderComputeFlag = true;
 }
 
 function scaleScene(oldSize, newSize) {
@@ -150,7 +150,7 @@ function animate() {
 
 	rotatePlane(PLANE_ROTATION_VELOCITY);
 	
-	airplane.transmute(lightcalc, smooth);
+	airplane.transmute(shaderComputeFlag, diffuseMaterialFlag);
 	direclight.switchLight();
 
 	toggleSpotlights();
@@ -206,11 +206,11 @@ function onKeyDown(e) {
 			break;
 		case 'l':
 		case 'L':
-			lightcalc = !lightcalc;
+			shaderComputeFlag = !shaderComputeFlag;
 			break;
 		case 'g':
 		case 'G':
-			smooth = !smooth;
+			diffuseMaterialFlag = !diffuseMaterialFlag;
 			break;
 		case '1':
 			spotlights[0].lit = !spotlights[0].lit;

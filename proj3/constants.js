@@ -55,40 +55,40 @@ const PLANE_DEPTH_SEGMENTS  = 1;
 const PLANE_ROTATION_VELOCITY = Math.PI/2;
 
 // Airplane materials
-const PLANE_MATERIAL_BASIC =
+const PLANE_MATERIAL_BODY_BASIC =
 	new THREE.MeshBasicMaterial({color: 0xf5f6f6, wireframe: false});
 
-const PLANE_MATERIAL_LAMBERT =
+const PLANE_MATERIAL_BODY_LAMBERT =
 	new THREE.MeshLambertMaterial({color: 0xf5f6f6, wireframe: false});
 
-const PLANE_MATERIAL_PHONG =
+const PLANE_MATERIAL_BODY_PHONG =
 	new THREE.MeshPhongMaterial({color: 0xf5f6f6, 
-		specular: 0xe8e9e9, 
-		shininess: 30, 
+		specular: 0xe8e9e9,
+		shininess: 30,
 		wireframe: false});
 
-const WING_MATERIAL_BASIC =
+const PLANE_MATERIAL_WING_BASIC =
 	new THREE.MeshBasicMaterial({color: 0xc0c1c1, wireframe: false});
 
-const WING_MATERIAL_LAMBERT =
+const PLANE_MATERIAL_WING_LAMBERT =
 	new THREE.MeshLambertMaterial({color: 0xc0c1c1, wireframe: false});
 
-const WING_MATERIAL_PHONG =
+const PLANE_MATERIAL_WING_PHONG =
 	new THREE.MeshPhongMaterial({color: 0xc0c1c1,
 		specular: 0xb3b4b4,
 		shininess: 15,
 		wireframe: false});
 
-const COCKPIT_MATERIAL_BASIC =
+const PLANE_MATERIAL_COCKPIT_BASIC =
 	new THREE.MeshBasicMaterial({color: 0x737373, wireframe: false});
 
-const COCKPIT_MATERIAL_LAMBERT =
+const PLANE_MATERIAL_COCKPIT_LAMBERT =
 	new THREE.MeshLambertMaterial({color: 0x737373, 
 		transparent: true,
 		opacity: 0.5,
 		wireframe: false});
 
-const COCKPIT_MATERIAL_PHONG =
+const PLANE_MATERIAL_COCKPIT_PHONG =
 	new THREE.MeshPhongMaterial({color: 0x737373,
 		specular: 0x636363,
 		shininess: 10,
@@ -96,25 +96,25 @@ const COCKPIT_MATERIAL_PHONG =
 		opacity: 0.5,
 		wireframe: false});
 
-const AFTERBURNER_MATERIAL_BASIC =
+const PLANE_MATERIAL_AFTERBURNER_BASIC =
 	new THREE.MeshBasicMaterial({color: 0x737373, wireframe: false});
 
-const AFTERBURNER_MATERIAL_LAMBERT =true
+const PLANE_MATERIAL_AFTERBURNER_LAMBERT =
 	new THREE.MeshLambertMaterial({color: 0x737373, wireframe: false});
 
-const AFTERBURNER_MATERIAL_PHONG = 
+const PLANE_MATERIAL_AFTERBURNER_PHONG =
 	new THREE.MeshPhongMaterial({color: 0x000000,
 		specular: 0xa5a5a5,
 		shininess: 3,
 		wireframe: false});
 
-const LEVEL1_MATERIAL_BASIC =
+const PLANE_MATERIAL_AB_TIP_BASIC =
 	new THREE.MeshBasicMaterial({color: 0xfbcf9a, wireframe: false});
 
-const LEVEL1_MATERIAL_LAMBERT =
+const PLANE_MATERIAL_AB_TIP_LAMBERT =
 	new THREE.MeshLambertMaterial({color: 0xfbcf9a, wireframe: false});
 
-const LEVEL1_MATERIAL_PHONG =
+const PLANE_MATERIAL_AB_TIP_PHONG =
 	new THREE.MeshPhongMaterial({color: 0xf8b83c,
 		specular: 0xb86f3c,
 		shininess: 1,
