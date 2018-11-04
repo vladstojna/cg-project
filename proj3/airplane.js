@@ -19,151 +19,140 @@ class Airplane extends THREE.Object3D {
 
 		/* Body */
 		/* ------------------------------------------------------------- */
-
-		this.body = new THREE.Mesh(
-			new BoxGeometry(width, height, length,
-				widthSegments, heightSegments, depthSegments),
-			PLANE_MATERIAL_BODY_PHONG);
-
-		this.compose(this.body,
-			PLANE_MATERIAL_BODY_BASIC,
-			PLANE_MATERIAL_BODY_LAMBERT,
-			PLANE_MATERIAL_BODY_PHONG);
-
-		this.add(this.body);
+		this.body =
+			this.createBox(this,
+				width, height, length,
+				0, 0, 0,
+				0, 0, 0,
+				widthSegments, heightSegments, depthSegments,
+				PLANE_MATERIAL_BODY_BASIC,
+				PLANE_MATERIAL_BODY_LAMBERT,
+				PLANE_MATERIAL_BODY_PHONG);
 
 		/* Stabilizers */
 		/* ------------------------------------------------------------- */
+		this.leftStabilizer =
+			this.createPrism(this.body,
+				height/10, stabilizerSize, stabilizerSize,
+				-stabilizerSize/2 - width/2, 0, -length/2 + stabilizerSize/2,
+				0, -Math.PI/2, -Math.PI/2,
+				widthSegments, heightSegments, depthSegments,
+				PLANE_MATERIAL_WING_BASIC,
+				PLANE_MATERIAL_WING_LAMBERT,
+				PLANE_MATERIAL_WING_PHONG);
 
-		var leftStabilizer = new THREE.Mesh(
-			new StabilizerGeometry(height/10, stabilizerSize, stabilizerSize,
-				widthSegments, heightSegments, depthSegments),
-			PLANE_MATERIAL_WING_PHONG);
+		this.rightStabilizer =
+			this.createPrism(this.body,
+				height/10, stabilizerSize, stabilizerSize,
+				stabilizerSize/2 + width/2, 0, -length/2 + stabilizerSize/2,
+				0, Math.PI/2, Math.PI/2,
+				widthSegments, heightSegments, depthSegments,
+				PLANE_MATERIAL_WING_BASIC,
+				PLANE_MATERIAL_WING_LAMBERT,
+				PLANE_MATERIAL_WING_PHONG);
 
-		var rightStabilizer = new THREE.Mesh(
-			new StabilizerGeometry(height/10, stabilizerSize, stabilizerSize,
-				widthSegments, heightSegments, depthSegments),
-			PLANE_MATERIAL_WING_PHONG);
-
-		this.compose(leftStabilizer,
-			PLANE_MATERIAL_WING_BASIC,
-			PLANE_MATERIAL_WING_LAMBERT,
-			PLANE_MATERIAL_WING_PHONG);
-
-		this.compose(rightStabilizer,
-			PLANE_MATERIAL_WING_BASIC,
-			PLANE_MATERIAL_WING_LAMBERT,
-			PLANE_MATERIAL_WING_PHONG);
-
-		this.body.add(leftStabilizer);
-		this.body.add(rightStabilizer);
-
-		// Set stabilizers horizontally
-		leftStabilizer.rotation.z = -Math.PI/2;
-		leftStabilizer.rotation.y = -Math.PI/2;
-		leftStabilizer.position.x -= stabilizerSize/2 + width/2;
-		leftStabilizer.position.z -= length/2 - stabilizerSize/2
-
-		rightStabilizer.rotation.z = Math.PI/2;
-		rightStabilizer.rotation.y = Math.PI/2;
-		rightStabilizer.position.x += stabilizerSize/2 + width/2;
-		rightStabilizer.position.z -= length/2 - stabilizerSize/2
-
-		var topStabilizer = new THREE.Mesh(
-			new StabilizerGeometry(height/10, stabilizerSize, stabilizerSize,
-				widthSegments, heightSegments, depthSegments),
-			PLANE_MATERIAL_WING_PHONG);
-
-		this.compose(topStabilizer,
-			PLANE_MATERIAL_WING_BASIC,
-			PLANE_MATERIAL_WING_LAMBERT,
-			PLANE_MATERIAL_WING_PHONG);
-
-		this.body.add(topStabilizer);
-
-		// Set top stabilizer
-		topStabilizer.position.z -= length/2 - stabilizerSize/2;
-		topStabilizer.position.y += height/2 + stabilizerSize/2;
+		this.topStabilizer =
+			this.createPrism(this.body,
+				height/10, stabilizerSize, stabilizerSize,
+				0, height/2 + stabilizerSize/2, -length/2 + stabilizerSize/2,
+				0, 0, 0,
+				widthSegments, heightSegments, depthSegments,
+				PLANE_MATERIAL_WING_BASIC,
+				PLANE_MATERIAL_WING_LAMBERT,
+				PLANE_MATERIAL_WING_PHONG);
 
 		/* Afterburner */
 		/* ------------------------------------------------------------- */
+		this.afterburner =
+			this.createBox(this.body,
+				width/2, height/2, afterburnerLength,
+				0, 0, -length/2 - afterburnerLength/2,
+				0, 0, 0,
+				widthSegments, heightSegments, depthSegments,
+				PLANE_MATERIAL_AFTERBURNER_BASIC,
+				PLANE_MATERIAL_AFTERBURNER_LAMBERT,
+				PLANE_MATERIAL_AFTERBURNER_PHONG);
 
-		var afterburner = new THREE.Mesh(
-			new AfterburnerGeometry(width/2, height/2, afterburnerLength,
-				widthSegments, heightSegments, depthSegments),
-			PLANE_MATERIAL_AFTERBURNER_PHONG);
-
-		var afterburnerLevel1 = new THREE.Mesh(
-			new AfterburnerGeometry(width/4, height/4, afterburnerLength/2,
-				widthSegments, heightSegments, depthSegments),
-			PLANE_MATERIAL_AB_TIP_PHONG);
-
-		this.compose(afterburner,
-			PLANE_MATERIAL_AFTERBURNER_BASIC,
-			PLANE_MATERIAL_AFTERBURNER_LAMBERT,
-			PLANE_MATERIAL_AFTERBURNER_PHONG);
-		this.compose(afterburnerLevel1,
-			PLANE_MATERIAL_AB_TIP_BASIC,
-			PLANE_MATERIAL_AB_TIP_LAMBERT,
-			PLANE_MATERIAL_AB_TIP_PHONG);
-
-		this.body.add(afterburner);
-		this.body.add(afterburnerLevel1);
-
-		afterburner.position.z -= length/2 + afterburnerLength/2;
-		afterburnerLevel1.position.z -= length/2 + afterburnerLength + afterburnerLength/4;
+		this.exhaust =
+			this.createBox(this.afterburner,
+				width/4, height/4, afterburnerLength/4,
+				0, 0, -afterburnerLength/2,
+				0, 0, 0,
+				widthSegments, heightSegments, depthSegments,
+				PLANE_MATERIAL_AB_TIP_BASIC,
+				PLANE_MATERIAL_AB_TIP_LAMBERT,
+				PLANE_MATERIAL_AB_TIP_PHONG);
 
 		/* Wings */
 		/* ------------------------------------------------------------- */
+		this.leftWing =
+			this.createPrism(this.body,
+				height/10, length/2, wingSpan,
+				-wingSpan/2 - width/2, 0, 0,
+				0, -Math.PI/2, -Math.PI/2,
+				widthSegments, heightSegments, depthSegments,
+				PLANE_MATERIAL_WING_BASIC,
+				PLANE_MATERIAL_WING_LAMBERT,
+				PLANE_MATERIAL_WING_PHONG);
 
-		var leftWing = new THREE.Mesh(
-			new WingGeometry(height/10, length/2, wingSpan,
-				widthSegments, heightSegments, depthSegments),
-			PLANE_MATERIAL_WING_PHONG);
-
-		var rightWing = new THREE.Mesh(
-			new WingGeometry(height/10, length/2, wingSpan,
-				widthSegments, heightSegments, depthSegments),
-			PLANE_MATERIAL_WING_PHONG);
-
-		this.compose(leftWing,
-			PLANE_MATERIAL_WING_BASIC,
-			PLANE_MATERIAL_WING_LAMBERT,
-			PLANE_MATERIAL_WING_PHONG);
-		this.compose(rightWing,
-			PLANE_MATERIAL_WING_BASIC,
-			PLANE_MATERIAL_WING_LAMBERT,
-			PLANE_MATERIAL_WING_PHONG);
-
-		this.body.add(leftWing);
-		this.body.add(rightWing);
-
-		// Set wings horizontally
-		
-		leftWing.rotation.z = -Math.PI/2;
-		leftWing.rotation.y = -Math.PI/2;
-		leftWing.position.x -= wingSpan/2 + width/2;
-
-		rightWing.rotation.z = Math.PI/2;
-		rightWing.rotation.y = Math.PI/2;
-		rightWing.position.x += wingSpan/2 + width/2;
+		this.rightWing =
+			this.createPrism(this.body, height/10, length/2, wingSpan,
+				wingSpan/2 + width/2, 0, 0,
+				0, Math.PI/2, Math.PI/2,
+				widthSegments, heightSegments, depthSegments,
+				PLANE_MATERIAL_WING_BASIC,
+				PLANE_MATERIAL_WING_LAMBERT,
+				PLANE_MATERIAL_WING_PHONG);
 
 		/* Cockpit */
 		/* ------------------------------------------------------------- */
+		this.cockpit =
+			this.createPrism(this.body,
+				width, height, cockpitLength,
+				0, 0, length/2 + cockpitLength/2,
+				0, 0, 0,
+				widthSegments, heightSegments, depthSegments,
+				PLANE_MATERIAL_COCKPIT_BASIC,
+				PLANE_MATERIAL_COCKPIT_LAMBERT,
+				PLANE_MATERIAL_COCKPIT_PHONG);
 
-		var cockpit = new THREE.Mesh(
-			new CockpitGeometry(width, height, cockpitLength,
-				widthSegments, heightSegments, depthSegments),
-			PLANE_MATERIAL_COCKPIT_PHONG);
+		/* Side exhausts */
+		/* ------------------------------------------------------------- */
+		this.createPrism(this.body,
+			height, height/2, cockpitLength,
+			-width/2 - height/4, 0, length/2 - cockpitLength/2,
+			0, 0, Math.PI/2,
+			widthSegments, heightSegments, depthSegments,
+			PLANE_MATERIAL_AFTERBURNER_BASIC,
+			PLANE_MATERIAL_AFTERBURNER_LAMBERT,
+			PLANE_MATERIAL_AFTERBURNER_PHONG);
 
-		this.compose(cockpit,
-			PLANE_MATERIAL_COCKPIT_BASIC,
-			PLANE_MATERIAL_COCKPIT_LAMBERT,
-			PLANE_MATERIAL_COCKPIT_PHONG);
+		this.createPrism(this.body,
+			height, height/2, cockpitLength,
+			width/2 + height/4, 0, length/2 - cockpitLength/2,
+			0, 0, -Math.PI/2,
+			widthSegments, heightSegments, depthSegments,
+			PLANE_MATERIAL_AFTERBURNER_BASIC,
+			PLANE_MATERIAL_AFTERBURNER_LAMBERT,
+			PLANE_MATERIAL_AFTERBURNER_PHONG);
+	}
 
-		this.body.add(cockpit);
+	createBox(parent, w, h, l, xPos, yPos, zPos, xRot, yRot, zRot, wSeg, hSeg, dSeg, mB, mL, mP) {
+		var box = new THREE.Mesh(new BoxGeometry(w, h, l, wSeg, hSeg, dSeg), mP);
+		parent.add(box);
+		box.rotation.set(xRot, yRot, zRot);
+		box.position.set(xPos, yPos, zPos);
+		this.compose(box, mB, mL, mP);
+		return box;
+	}
 
-		cockpit.position.z += length/2 + cockpitLength/2;
+	createPrism(parent, w, h, l, xPos, yPos, zPos, xRot, yRot, zRot, wSeg, hSeg, dSeg, mB, mL, mP) {
+		var prism = new THREE.Mesh(new RightTriangularPrismGeometry(w, h, l, wSeg, hSeg, dSeg), mP);
+		parent.add(prism);
+		prism.rotation.set(xRot, yRot, zRot);
+		prism.position.set(xPos, yPos, zPos);
+		this.compose(prism, mB, mL, mP);
+		return prism;
 	}
 
 	/* compose: generate array of materials of a mesh */
