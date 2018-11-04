@@ -149,9 +149,3 @@ class RightTriangularPrismGeometry extends THREE.Geometry {
 		this.mergeVertices();
 	}
 }
-
-/* Specific geometries */
-class CockpitGeometry     extends RightTriangularPrismGeometry {}
-class WingGeometry        extends RightTriangularPrismGeometry {}
-class StabilizerGeometry  extends RightTriangularPrismGeometry {}
-class AfterburnerGeometry extends BoxGeometry {}
