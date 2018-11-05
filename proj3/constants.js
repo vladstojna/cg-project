@@ -54,42 +54,49 @@ const PLANE_DEPTH_SEGMENTS  = 1;
 
 const PLANE_ROTATION_VELOCITY = Math.PI/2;
 
+// Airplane color constants
+const BODY_COLOR    = 0xf5f6f6;
+const WING_COLOR    = 0xc0c1c1;
+const COCKPIT_COLOR = 0x737373;
+const AB_COLOR      = 0x101010;
+const EXHAUST_COLOR = 0xf8b83c;
+
 // Airplane materials
 const PLANE_MATERIAL_BODY_BASIC =
-	new THREE.MeshBasicMaterial({color: 0xf5f6f6, wireframe: false});
+	new THREE.MeshBasicMaterial({color: BODY_COLOR, wireframe: false});
 
 const PLANE_MATERIAL_BODY_LAMBERT =
-	new THREE.MeshLambertMaterial({color: 0xf5f6f6, wireframe: false});
+	new THREE.MeshLambertMaterial({color: BODY_COLOR, wireframe: false});
 
 const PLANE_MATERIAL_BODY_PHONG =
-	new THREE.MeshPhongMaterial({color: 0xf5f6f6, 
+	new THREE.MeshPhongMaterial({color: BODY_COLOR,
 		specular: 0xe8e9e9,
 		shininess: 30,
 		wireframe: false});
 
 const PLANE_MATERIAL_WING_BASIC =
-	new THREE.MeshBasicMaterial({color: 0xc0c1c1, wireframe: false});
+	new THREE.MeshBasicMaterial({color: WING_COLOR, wireframe: false});
 
 const PLANE_MATERIAL_WING_LAMBERT =
-	new THREE.MeshLambertMaterial({color: 0xc0c1c1, wireframe: false});
+	new THREE.MeshLambertMaterial({color: WING_COLOR, wireframe: false});
 
 const PLANE_MATERIAL_WING_PHONG =
-	new THREE.MeshPhongMaterial({color: 0xc0c1c1,
+	new THREE.MeshPhongMaterial({color: WING_COLOR,
 		specular: 0xb3b4b4,
 		shininess: 15,
 		wireframe: false});
 
 const PLANE_MATERIAL_COCKPIT_BASIC =
-	new THREE.MeshBasicMaterial({color: 0x737373, wireframe: false});
+	new THREE.MeshBasicMaterial({color: COCKPIT_COLOR, wireframe: false});
 
 const PLANE_MATERIAL_COCKPIT_LAMBERT =
-	new THREE.MeshLambertMaterial({color: 0x737373, 
+	new THREE.MeshLambertMaterial({color: COCKPIT_COLOR,
 		transparent: true,
 		opacity: 0.5,
 		wireframe: false});
 
 const PLANE_MATERIAL_COCKPIT_PHONG =
-	new THREE.MeshPhongMaterial({color: 0x737373,
+	new THREE.MeshPhongMaterial({color: COCKPIT_COLOR,
 		specular: 0x636363,
 		shininess: 10,
 		transparent: true,
@@ -97,25 +104,25 @@ const PLANE_MATERIAL_COCKPIT_PHONG =
 		wireframe: false});
 
 const PLANE_MATERIAL_AFTERBURNER_BASIC =
-	new THREE.MeshBasicMaterial({color: 0x737373, wireframe: false});
+	new THREE.MeshBasicMaterial({color: AB_COLOR, wireframe: false});
 
 const PLANE_MATERIAL_AFTERBURNER_LAMBERT =
-	new THREE.MeshLambertMaterial({color: 0x737373, wireframe: false});
+	new THREE.MeshLambertMaterial({color: AB_COLOR, wireframe: false});
 
 const PLANE_MATERIAL_AFTERBURNER_PHONG =
-	new THREE.MeshPhongMaterial({color: 0x000000,
+	new THREE.MeshPhongMaterial({color: AB_COLOR,
 		specular: 0xa5a5a5,
 		shininess: 3,
 		wireframe: false});
 
 const PLANE_MATERIAL_AB_TIP_BASIC =
-	new THREE.MeshBasicMaterial({color: 0xfbcf9a, wireframe: false});
+	new THREE.MeshBasicMaterial({color: EXHAUST_COLOR, wireframe: false});
 
 const PLANE_MATERIAL_AB_TIP_LAMBERT =
-	new THREE.MeshLambertMaterial({color: 0xfbcf9a, wireframe: false});
+	new THREE.MeshLambertMaterial({color: EXHAUST_COLOR, wireframe: false});
 
 const PLANE_MATERIAL_AB_TIP_PHONG =
-	new THREE.MeshPhongMaterial({color: 0xf8b83c,
+	new THREE.MeshPhongMaterial({color: EXHAUST_COLOR,
 		specular: 0xb86f3c,
 		shininess: 1,
 		wireframe: false});
