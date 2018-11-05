@@ -54,6 +54,10 @@ const PLANE_DEPTH_SEGMENTS  = 1;
 
 const PLANE_ROTATION_VELOCITY = Math.PI/2;
 
+// Normal helpers constants
+const N_COLOR = 0x00bb00;
+const N_SIZE  = 20;
+
 // Airplane color constants
 const BODY_COLOR    = 0xf5f6f6;
 const WING_COLOR    = 0xc0c1c1;
