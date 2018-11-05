@@ -119,7 +119,9 @@ function createDirecLight() {
 		DLIGHT_X,
 		DLIGHT_Y,
 		DLIGHT_Z,
-		DLIGHT_VISIB);
+		DLIGHT_VISIB,
+		DLIGHT_COLOR,
+		DLIGHT_INT);
 
 	scene.add(direclight);
 	shaderComputeFlag = true;

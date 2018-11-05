@@ -155,4 +155,4 @@ const DLIGHT_Z = 200;
 
 const DLIGHT_VISIB = true;
 const DLIGHT_COLOR = 0xffffff;
-const DLIGHT_INT   = 1;
+const DLIGHT_INT   = 0.5;
