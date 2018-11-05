@@ -17,6 +17,9 @@ var spotlights;
 var shaderComputeFlag;
 var diffuseMaterialFlag;
 
+var wireframeFlag;
+var normalHelperFlag;
+
 var width;
 var height;
 
@@ -53,7 +56,10 @@ function createScene() {
 		PLANE_DEPTH_SEGMENTS);
 	
 	scene.add(airplane);
+
 	diffuseMaterialFlag = false;
+	wireframeFlag       = false;
+	normalHelperFlag    = false;
 
 	scene.add(new Ground(
 		GROUND_WIDTH,
@@ -64,9 +70,6 @@ function createScene() {
 		GROUND_POS_Z));
 
 	addSpotlights();
-
-	//scene.add(new THREE.FaceNormalsHelper(airplane.body, 50, 0x00bb00, 2))
-	//scene.add(new THREE.VertexNormalsHelper(airplane.body, 50, 0xbbbbbb, 2))
 }
 
 function addSpotlights() {
@@ -153,6 +156,8 @@ function animate() {
 	rotatePlane(PLANE_ROTATION_VELOCITY);
 	
 	airplane.transmute(shaderComputeFlag, diffuseMaterialFlag);
+	airplane.toggleNormals(normalHelperFlag);
+	airplane.toggleWireframe(wireframeFlag);
 	direclight.switchLight();
 
 	toggleSpotlights();
@@ -201,6 +206,14 @@ function onKeyDown(e) {
 			break;
 		case 'ArrowDown':
 			pitchDown = true;
+			break;
+		case 'a':
+		case 'A':
+			wireframeFlag = !wireframeFlag;
+			break;
+		case 'e':
+		case 'E':
+			normalHelperFlag = !normalHelperFlag;
 			break;
 		case 'n':
 		case 'N':

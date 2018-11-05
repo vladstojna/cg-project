@@ -17,6 +17,11 @@ class Airplane extends THREE.Object3D {
 		this.indexMaterial       = this.indexPhongMaterial;
 		this.indexShadedMaterial = this.indexPhongMaterial;
 
+		/* Flags */
+		/* ------------------------------------------------------------- */
+		this.wireframeFlag        = false;
+		this.normalHelperFlag     = false;
+
 		/* Body */
 		/* ------------------------------------------------------------- */
 		this.body =
@@ -139,19 +144,25 @@ class Airplane extends THREE.Object3D {
 
 	createBox(parent, w, h, l, xPos, yPos, zPos, xRot, yRot, zRot, wSeg, hSeg, dSeg, mB, mL, mP) {
 		var box = new THREE.Mesh(new BoxGeometry(w, h, l, wSeg, hSeg, dSeg), mP);
+		var nh  = new THREE.FaceNormalsHelper(box, N_SIZE, N_COLOR, 1);
 		parent.add(box);
 		box.rotation.set(xRot, yRot, zRot);
 		box.position.set(xPos, yPos, zPos);
 		this.compose(box, mB, mL, mP);
+		box.add(nh);
+		nh.visible = this.normalHelperFlag;
 		return box;
 	}
 
 	createPrism(parent, w, h, l, xPos, yPos, zPos, xRot, yRot, zRot, wSeg, hSeg, dSeg, mB, mL, mP) {
 		var prism = new THREE.Mesh(new RightTriangularPrismGeometry(w, h, l, wSeg, hSeg, dSeg), mP);
+		var nh    = new THREE.FaceNormalsHelper(prism, N_SIZE, N_COLOR, 1);
 		parent.add(prism);
 		prism.rotation.set(xRot, yRot, zRot);
 		prism.position.set(xPos, yPos, zPos);
 		this.compose(prism, mB, mL, mP);
+		prism.add(nh);
+		nh.visible = this.normalHelperFlag;
 		return prism;
 	}
 
@@ -182,11 +193,35 @@ class Airplane extends THREE.Object3D {
 		}
 	}
 
-	/* changemat: change material of all meshes */
+	/* changemat: change material of all meshes & keep wireframe state */
 	changemat(i) {
 		this.traverse(node => {
-			if (node instanceof THREE.Mesh)
+			if (node instanceof THREE.Mesh) {
 				node.material = node.materialArray[i];
+				node.material.wireframe = this.wireframeFlag;
+			}
 		});
+	}
+
+	/* toggle normal helpers */
+	toggleNormals(flag) {
+		if (this.normalHelperFlag != flag) {
+			this.traverse(node => {
+				if (node instanceof THREE.FaceNormalsHelper)
+					node.visible = flag;
+			});
+			this.normalHelperFlag = flag;
+		}
+	}
+
+	/* toggle wireframe */
+	toggleWireframe(flag) {
+		if (this.wireframeFlag != flag) {
+			this.traverse(node => {
+				if (node instanceof THREE.Mesh)
+					node.material.wireframe = flag;
+			});
+			this.wireframeFlag = flag;
+		}
 	}
 }
