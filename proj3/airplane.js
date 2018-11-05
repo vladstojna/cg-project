@@ -123,18 +123,18 @@ class Airplane extends THREE.Object3D {
 			-width/2 - height/4, 0, length/2 - cockpitLength/2,
 			0, 0, Math.PI/2,
 			widthSegments, heightSegments, depthSegments,
-			PLANE_MATERIAL_AFTERBURNER_BASIC,
-			PLANE_MATERIAL_AFTERBURNER_LAMBERT,
-			PLANE_MATERIAL_AFTERBURNER_PHONG);
+			PLANE_MATERIAL_WING_BASIC,
+			PLANE_MATERIAL_WING_LAMBERT,
+			PLANE_MATERIAL_WING_PHONG);
 
 		this.createPrism(this.body,
 			height, height/2, cockpitLength,
 			width/2 + height/4, 0, length/2 - cockpitLength/2,
 			0, 0, -Math.PI/2,
 			widthSegments, heightSegments, depthSegments,
-			PLANE_MATERIAL_AFTERBURNER_BASIC,
-			PLANE_MATERIAL_AFTERBURNER_LAMBERT,
-			PLANE_MATERIAL_AFTERBURNER_PHONG);
+			PLANE_MATERIAL_WING_BASIC,
+			PLANE_MATERIAL_WING_LAMBERT,
+			PLANE_MATERIAL_WING_PHONG);
 	}
 
 	createBox(parent, w, h, l, xPos, yPos, zPos, xRot, yRot, zRot, wSeg, hSeg, dSeg, mB, mL, mP) {
@@ -184,9 +184,9 @@ class Airplane extends THREE.Object3D {
 
 	/* changemat: change material of all meshes */
 	changemat(i) {
-		this.body.material = this.body.materialArray[i];
-		this.body.children.forEach(mesh => {
-			mesh.material = mesh.materialArray[i];
+		this.traverse(node => {
+			if (node instanceof THREE.Mesh)
+				node.material = node.materialArray[i];
 		});
 	}
 }
