@@ -16,9 +16,10 @@ var plight;
 var dlight;
 
 var flagBallDirection;
-
 var flagWireframe;
 var flagShaderCompute;
+var flagPaused;
+var flagRefresh;
 
 //------------------------------------------------------------------------------
 
@@ -35,7 +36,7 @@ function createScene() {
 		new THREE.MeshPhongMaterial({color: 0xff0000, wireframe: false}),
 		new THREE.MeshPhongMaterial({color: 0x00ff00, wireframe: false}),
 		0, 50, 0,
-		300, 0, Math.PI/1080, 2*Math.PI
+		300, 0, Math.PI/180, 2*Math.PI
 	);
 
 	board = new Board(1000, 1000, 1, 1,
@@ -116,10 +117,18 @@ function scaleScene(oldSize, newSize) {
 //------------------------------------------------------------------------------
 
 function animate() {
-	// Rotates ball according to frametime
-	ball.rotate(clock.getDelta(), flagBallDirection);
+	// Update
+
+	var delta = clock.getDelta();
+
+	if (!flagPaused) {
+		//ball.resetState()
+		ball.rotate(delta, flagBallDirection);
+	}
 
 	controls.update();
+
+	// Display
 
 	render();
 
@@ -143,8 +152,9 @@ function init() {
 	flagWireframe     = false;
 	flagShaderCompute = true;
 	flagBallDirection = -1;
+	flagPaused        = false;
+	flagRefresh       = false;
 
-	/* Starting camera is orthographic camera */
 	render();
 
 	window.addEventListener("keydown", onKeyDown);
@@ -166,20 +176,28 @@ function onKeyDown(e) {
 		// Toggle wireframe
 		case 'w':
 		case 'W':
+			flagWireframe = !flagWireframe;
+			break;
 		// Toggle shading
 		case 'l':
 		case 'L':
+			flagShaderCompute = !flagShaderCompute;
+			break;
 		// Control ball movement
 		case 'b':
 		case 'B':
 			flagBallDirection *= -1;
 			break;
 		// Pause
-		case 'p':
-		case 'P':
+		case 's':
+		case 'S':
+			flagPaused = !flagPaused;
+			break;
 		// Refresh
 		case 'r':
 		case 'R':
+			flagRefresh = !flagRefresh;
+			break;
 	}
 }
 
