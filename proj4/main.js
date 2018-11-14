@@ -33,23 +33,23 @@ function createScene() {
 	scene = new THREE.Scene();
 
 	ball = new RotatingBall(50, 24, 24,
-		new THREE.MeshPhongMaterial({color: 0xff0000, wireframe: true}),
-		new THREE.MeshPhongMaterial({color: 0x00ff00, wireframe: true}),
+		new THREE.MeshPhongMaterial({color: 0xff0000, wireframe: false}),
+		new THREE.MeshBasicMaterial({color: 0xff0000, wireframe: false}),
 		0, 50, 0,
 		300, 0, Math.PI/180, Math.PI
 	);
 
 	board = new Board(1000, 1000, 16, 16,
 		0, 0, 0,
-		new THREE.MeshPhongMaterial({color: 0xffff00, wireframe: true}),
-		new THREE.MeshPhongMaterial({color: 0x00ff00, wireframe: true})
+		new THREE.MeshPhongMaterial({color: 0xffff00, wireframe: false}),
+		new THREE.MeshBasicMaterial({color: 0xffff00, wireframe: false})
 	);
 
 	cube = new Cube(100, 100, 100,
 		8, 8, 8,
 		0, 50, 0,
-		new THREE.MeshPhongMaterial({color: 0xff00ff, wireframe: true}),
-		new THREE.MeshPhongMaterial({color: 0x00ff00, wireframe: true})
+		new THREE.MeshPhongMaterial({color: 0xff00ff, wireframe: false}),
+		new THREE.MeshBasicMaterial({color: 0xff00ff, wireframe: false})
 	);
 
 	plight = new PointLight(0xffffff, 1, 600, 1, 0, 200, 0);
@@ -121,8 +121,17 @@ function animate() {
 
 	var delta = clock.getDelta();
 
-	if (!flagPaused)
+	if (!flagPaused) {
 		ball.rotate(delta, flagBallDirection);
+
+		ball.toggleWireframe(flagWireframe);
+		cube.toggleWireframe(flagWireframe);
+		board.toggleWireframe(flagWireframe);
+
+		ball.toggleShading(flagShaderCompute);
+		cube.toggleShading(flagShaderCompute);
+		board.toggleShading(flagShaderCompute);
+	}
 
 	if (flagPaused && flagRefresh) {
 		controls.reset();
