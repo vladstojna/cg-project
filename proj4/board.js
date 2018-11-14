@@ -1,6 +1,6 @@
 /* Custom board class */
 
-class Board extends THREE.Object3D {
+class Board extends GameEntity {
 
 	/* constructor */
 	constructor(width, height, widthSegments=1, heightSegments=1,

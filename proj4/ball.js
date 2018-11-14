@@ -1,6 +1,6 @@
 /* Custom ball class */
 
-class RotatingBall extends THREE.Object3D {
+class RotatingBall extends GameEntity {
 
 	/* constructor */
 	constructor(sphereRadius, widthSegments=16, heightSegments=16,

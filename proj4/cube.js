@@ -1,6 +1,6 @@
 /* Custom cube class */
 
-class Cube extends THREE.Object3D {
+class Cube extends GameEntity {
 
 	/* constructor */
 	constructor(width, height, depth,
