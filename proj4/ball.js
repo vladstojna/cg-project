@@ -12,6 +12,15 @@ class RotatingBall extends THREE.Object3D {
 
 		super();
 
+		/* auto reset flag */
+		this.autoReset = false;
+
+		/* Save initial values for resetting purposes */
+		this.startingRotation = new THREE.Vector3(0, 0, 0);
+		this.startingVelocity = rotationVelocity;
+		
+		this.rotationRadius = rotationRadius;
+
 		this.position.set(rotationX, rotationY, rotationZ);
 		this.rotationVelocity    = rotationVelocity;
 		this.rotationAccel       = rotationAccel;
@@ -29,17 +38,36 @@ class RotatingBall extends THREE.Object3D {
 
 		this.add(this.sphereMesh);
 
-		}
+	}
+
+	rotateSphereMesh(distance) {
+		this.sphereMesh.rotateZ(distance / this.sphereMesh.geometry.parameters.radius);
+	}
 
 	/* rotates sphere around rotation center */
 	rotate(time, direction) {
 		this.rotateY(this.rotationVelocity * time);
-		this.sphereMesh.rotateZ(-this.rotationVelocity * time)
+		this.rotateSphereMesh(-this.rotationVelocity * time * this.rotationRadius);
 
 		if (direction < 0 && this.rotationVelocity <= 0)
 			this.rotationVelocity = 0;
 		else if (this.rotationVelocity + direction * this.rotationAccel < this.maxRotationVelocity)
 			this.rotationVelocity += direction * this.rotationAccel;
+	}
+
+	/* resets ball to initial state */
+	resetState(flag) {
+		if (this.autoReset != flag)
+			this.rotation.set(
+				this.startingRotation.x,
+				this.startingRotation.y,
+				this.startingRotation.z);
+			this.sphereMesh.rotation.set(
+				this.startingRotation.x,
+				this.startingRotation.y,
+				this.startingRotation.z);
+			this.rotationVelocity = this.startingVelocity;
+			this.autoReset = flag;
 	}
 
 	toggleShading(flag) {}

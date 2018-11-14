@@ -32,24 +32,24 @@ function render() {
 function createScene() {
 	scene = new THREE.Scene();
 
-	ball = new RotatingBall(50, 24, 24,
-		new THREE.MeshPhongMaterial({color: 0xff0000, wireframe: false}),
-		new THREE.MeshPhongMaterial({color: 0x00ff00, wireframe: false}),
+	ball = new RotatingBall(150, 24, 24,
+		new THREE.MeshPhongMaterial({color: 0xff0000, wireframe: true}),
+		new THREE.MeshPhongMaterial({color: 0x00ff00, wireframe: true}),
 		0, 50, 0,
-		300, 0, Math.PI/180, 2*Math.PI
+		300, 0, Math.PI/180, Math.PI
 	);
 
-	board = new Board(1000, 1000, 1, 1,
+	board = new Board(1000, 1000, 16, 16,
 		0, 0, 0,
-		new THREE.MeshPhongMaterial({color: 0xffff00, wireframe: false}),
-		new THREE.MeshPhongMaterial({color: 0x00ff00, wireframe: false})
+		new THREE.MeshPhongMaterial({color: 0xffff00, wireframe: true}),
+		new THREE.MeshPhongMaterial({color: 0x00ff00, wireframe: true})
 	);
 
 	cube = new Cube(100, 100, 100,
 		8, 8, 8,
 		0, 50, 0,
-		new THREE.MeshPhongMaterial({color: 0xff00ff, wireframe: false}),
-		new THREE.MeshPhongMaterial({color: 0x00ff00, wireframe: false})
+		new THREE.MeshPhongMaterial({color: 0xff00ff, wireframe: true}),
+		new THREE.MeshPhongMaterial({color: 0x00ff00, wireframe: true})
 	);
 
 	plight = new PointLight(0xffffff, 1, 600, 1, 0, 200, 0);
@@ -57,8 +57,8 @@ function createScene() {
 	dlight = new DirectionalLight(0xffffff, 0.5, 500, 200, 500);
 
 	//dlight.add(new THREE.DirectionalLightHelper(dlight, 5));
-	//ball.add(new THREE.AxesHelper(100));
-	//ball.sphereMesh.add(new THREE.AxesHelper(100));
+	ball.add(new THREE.AxesHelper(100));
+	ball.sphereMesh.add(new THREE.AxesHelper(100));
 
 	scene.add(ball);
 	scene.add(board);
@@ -121,9 +121,12 @@ function animate() {
 
 	var delta = clock.getDelta();
 
-	if (!flagPaused) {
-		//ball.resetState()
+	if (!flagPaused)
 		ball.rotate(delta, flagBallDirection);
+
+	if (flagPaused && flagRefresh) {
+		controls.reset();
+		ball.resetState(flagRefresh);
 	}
 
 	controls.update();
