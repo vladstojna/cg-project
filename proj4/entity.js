@@ -25,17 +25,19 @@ class GameEntity extends THREE.Object3D {
 
 	/* toggles shader computing */
 	toggleShading(shaderFlag) {
-		if (this.shaderComputeFlag != shaderFlag)
+		if (this.shaderComputeFlag != shaderFlag) {
 			var tempMaterial;
 			this.traverse(node => {
-				if (node instanceof THREE.Mesh)
+				if (node instanceof THREE.Mesh) {
 					node.material = this.otherMaterial;
 					node.material.wireframe = this.wireframeFlag;
 					/* swaps current with other material */
 					tempMaterial         = this.currentMaterial;
 					this.currentMaterial = this.otherMaterial;
 					this.otherMaterial   = tempMaterial;
+				}
 			});
 			this.shaderComputeFlag = shaderFlag;
+		}
 	}
 }
