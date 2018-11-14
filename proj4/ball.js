@@ -37,8 +37,8 @@ class RotatingBall extends THREE.Object3D {
 		this.sphereMesh.rotateZ(-this.rotationVelocity * time)
 
 		if (direction < 0 && this.rotationVelocity <= 0)
-			this.rotationVelocity = 0
-		else if (0 < this.rotationVelocity <= this.maxRotationVelocity)
+			this.rotationVelocity = 0;
+		else if (this.rotationVelocity + direction * this.rotationAccel < this.maxRotationVelocity)
 			this.rotationVelocity += direction * this.rotationAccel;
 	}
 
