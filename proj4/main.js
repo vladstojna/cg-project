@@ -15,6 +15,8 @@ var cube;
 var plight;
 var dlight;
 
+var flagBallDirection;
+
 var flagWireframe;
 var flagShaderCompute;
 
@@ -33,7 +35,7 @@ function createScene() {
 		new THREE.MeshPhongMaterial({color: 0xff0000, wireframe: false}),
 		new THREE.MeshPhongMaterial({color: 0x00ff00, wireframe: false}),
 		0, 50, 0,
-		300, 0, Math.PI/1080
+		300, 0, Math.PI/1080, 2*Math.PI
 	);
 
 	board = new Board(1000, 1000, 1, 1,
@@ -62,9 +64,6 @@ function createScene() {
 	scene.add(cube);
 	scene.add(plight);
 	scene.add(dlight);
-
-	flagWireframe     = false;
-	flagShaderCompute = true;
 }
 
 function createControls() {
@@ -118,7 +117,7 @@ function scaleScene(oldSize, newSize) {
 
 function animate() {
 	// Rotates ball according to frametime
-	ball.rotate(clock.getDelta());
+	ball.rotate(clock.getDelta(), flagBallDirection);
 
 	controls.update();
 
@@ -140,6 +139,10 @@ function init() {
 	createPerspectiveCamera();
 	createControls();
 	createClock();
+
+	flagWireframe     = false;
+	flagShaderCompute = true;
+	flagBallDirection = -1;
 
 	/* Starting camera is orthographic camera */
 	render();
@@ -169,6 +172,8 @@ function onKeyDown(e) {
 		// Control ball movement
 		case 'b':
 		case 'B':
+			flagBallDirection *= -1;
+			break;
 		// Pause
 		case 'p':
 		case 'P':
