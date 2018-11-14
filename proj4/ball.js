@@ -10,7 +10,7 @@ class RotatingBall extends GameEntity {
 			maxRotationVelocity=Math.PI,
 			texture=0) {
 
-		super();
+		super(shadedMaterial, basicMaterial);
 
 		/* auto reset flag */
 		this.autoReset = false;
@@ -25,9 +25,6 @@ class RotatingBall extends GameEntity {
 		this.rotationVelocity    = rotationVelocity;
 		this.rotationAccel       = rotationAccel;
 		this.maxRotationVelocity = maxRotationVelocity;
-
-		this.currentMaterial = shadedMaterial;
-		this.otherMaterial   = basicMaterial;
 
 		this.sphereMesh = new THREE.Mesh(
 			new THREE.SphereGeometry(sphereRadius, widthSegments, heightSegments),

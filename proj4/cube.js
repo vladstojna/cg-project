@@ -9,12 +9,9 @@ class Cube extends GameEntity {
 			shadedMaterial, basicMaterial,
 			texture=0) {
 
-		super();
+		super(shadedMaterial, basicMaterial);
 
 		this.position.set(x, y, z);
-
-		this.currentMaterial = shadedMaterial;
-		this.otherMaterial   = basicMaterial;
 
 		this.add(new THREE.Mesh(
 			new THREE.BoxGeometry(
