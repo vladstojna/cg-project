@@ -2,6 +2,8 @@
 
 var scene;
 var camera;
+var controls;
+
 var clock;
 
 var width;
@@ -11,6 +13,10 @@ var ball;
 var board;
 var cube;
 var plight;
+var dlight;
+
+var flagWireframe;
+var flagShaderCompute;
 
 //------------------------------------------------------------------------------
 
@@ -43,15 +49,27 @@ function createScene() {
 		new THREE.MeshPhongMaterial({color: 0x00ff00, wireframe: false})
 	);
 
-	plight = new PointLight(0xffffff, 1, 1000, 2, 0, 200, 0);
+	plight = new PointLight(0xffffff, 1, 600, 1, 0, 200, 0);
 
-	ball.add(new THREE.AxesHelper(100));
-	ball.sphereMesh.add(new THREE.AxesHelper(100));
+	dlight = new DirectionalLight(0xffffff, 0.5, 500, 200, 500);
+
+	//dlight.add(new THREE.DirectionalLightHelper(dlight, 5));
+	//ball.add(new THREE.AxesHelper(100));
+	//ball.sphereMesh.add(new THREE.AxesHelper(100));
 
 	scene.add(ball);
 	scene.add(board);
 	scene.add(cube);
 	scene.add(plight);
+	scene.add(dlight);
+
+	flagWireframe     = false;
+	flagShaderCompute = true;
+}
+
+function createControls() {
+	controls = new THREE.OrbitControls(camera);
+	controls.rotateSpeed = 0.5;
 }
 
 function createOrtographicCamera() {
@@ -99,8 +117,10 @@ function scaleScene(oldSize, newSize) {
 //------------------------------------------------------------------------------
 
 function animate() {
-	// Gets frametime
+	// Rotates ball according to frametime
 	ball.rotate(clock.getDelta());
+
+	controls.update();
 
 	render();
 
@@ -111,7 +131,6 @@ function animate() {
 
 function init() {
 	renderer = new THREE.WebGLRenderer({antialias: true});
-
 	renderer.setSize(window.innerWidth, window.innerHeight);
 
 	document.body.appendChild(renderer.domElement);
@@ -119,6 +138,7 @@ function init() {
 	createScene();
 	//createOrtographicCamera();
 	createPerspectiveCamera();
+	createControls();
 	createClock();
 
 	/* Starting camera is orthographic camera */
@@ -130,11 +150,31 @@ function init() {
 
 function onKeyDown(e) {
 	switch(e.key) {
-		case '1':
-		case '2':
-		case '3':
-		case 'e':
-		case 'E':
+		// Toggle directional light
+		case 'd':
+		case 'D':
+			dlight.visible = !dlight.visible;
+			break;
+		// Toggle point light
+		case 'p':
+		case 'P':
+			plight.visible = !plight.visible;
+			break;
+		// Toggle wireframe
+		case 'w':
+		case 'W':
+		// Toggle shading
+		case 'l':
+		case 'L':
+		// Control ball movement
+		case 'b':
+		case 'B':
+		// Pause
+		case 'p':
+		case 'P':
+		// Refresh
+		case 'r':
+		case 'R':
 	}
 }
 
