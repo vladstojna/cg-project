@@ -32,7 +32,7 @@ function render() {
 function createScene() {
 	scene = new THREE.Scene();
 
-	ball = new RotatingBall(150, 24, 24,
+	ball = new RotatingBall(50, 24, 24,
 		new THREE.MeshPhongMaterial({color: 0xff0000, wireframe: true}),
 		new THREE.MeshPhongMaterial({color: 0x00ff00, wireframe: true}),
 		0, 50, 0,
