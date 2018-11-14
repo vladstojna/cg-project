@@ -25,7 +25,4 @@ class Board extends THREE.Object3D {
 			this.currentMaterial)
 		);
 	}
-
-	toggleShading(flag) {}
-	toggleWireframe(flag) {}
 }

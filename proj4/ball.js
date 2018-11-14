@@ -69,7 +69,4 @@ class RotatingBall extends THREE.Object3D {
 			this.rotationVelocity = this.startingVelocity;
 			this.autoReset = flag;
 	}
-
-	toggleShading(flag) {}
-	toggleWireframe(flag) {}
 }

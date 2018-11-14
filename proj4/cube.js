@@ -28,7 +28,4 @@ class Cube extends THREE.Object3D {
 		);
 
 	}
-
-	toggleShading(flag) {}
-	toggleWireframe(flag) {}
 }
