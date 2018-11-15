@@ -55,13 +55,11 @@ const BALL_ACCELERATION    = Math.PI/180;
 const BALL_MAX_VELOCITY    = Math.PI;
 
 const BALL_MATERIAL_PHONG = new THREE.MeshPhongMaterial({
-	color: 0xff0000,
 	specular: 0xf7f3d7, // light yellow
 	shininess: 75,
 	wireframe: false});
 
 const BALL_MATERIAL_BASIC = new THREE.MeshBasicMaterial({
-	color: 0xff0000,
 	wireframe: false});
 
 /* --------------------------------------------------------------- */
@@ -76,11 +74,9 @@ const BOARD_Y = 0;
 const BOARD_Z = 0;
 
 const BOARD_MATERIAL_LAMBERT = new THREE.MeshLambertMaterial({
-	color: 0xc1c1c1,
 	wireframe: false});
 
 const BOARD_MATERIAL_BASIC = new THREE.MeshBasicMaterial({
-	color: 0xc1c1c1,
 	wireframe: false});
 
 /* --------------------------------------------------------------- */
@@ -97,13 +93,11 @@ const CUBE_Y = CUBE_HEIGHT / 2;
 const CUBE_Z = 0;
 
 const CUBE_MATERIAL_PHONG = new THREE.MeshPhongMaterial({
-	color: 0x5a91e2,    // sky blue 
 	specular: 0xf2f2f2, // light grey
 	shininess: 5,
 	wireframe: false});
 
 const CUBE_MATERIAL_BASIC = new THREE.MeshBasicMaterial({
-	color: 0x5a91e2,    // sky blue
 	wireframe: false});
 
 /* Light source constants */
@@ -131,7 +125,7 @@ const DLIGHT_Z = 500;
 /* --------------------------------------------------------------- */
 
 const BALL_TEXTURE  = "textures/billiard_ball_texture.jpg";
-const BOARD_TEXTURE = "textures/chessboard_texture_bw.png";
+const BOARD_TEXTURE = "textures/chessboard_texture_wood.png";
 const CUBE_TEXTURE  = "textures/rubiks_cube_texture.png";
 const CUBE_BUMP_MAP = "textures/rubiks_cube_bump_map.png";
 const PAUSE_TEXTURE = "textures/pause_text.png"
