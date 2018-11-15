@@ -26,16 +26,18 @@ class Cube extends GameEntity {
 				depthSegments),
 			this.currentMaterial);
 
+		this.add(this.cubeMesh);
+
 		tex = new THREE.TextureLoader().load(texture);
+		tex.anisotropy = 8;
 		this.currentMaterial.map = tex;
 		this.otherMaterial.map   = tex;
 
 		bmp = new THREE.TextureLoader().load(bumpmap);
+		bmp.anisotropy = 8;
 		this.currentMaterial.bumpMap = bmp;
 
 		this.updateUVs(width);
-
-		this.add(this.cubeMesh);
 
 	}
 	
@@ -62,9 +64,9 @@ class Cube extends GameEntity {
 				var dx, dy;
 
 				// Face order in the image:
-				//			East
-				//	North	Down	South	Up
-				//			West
+				// East
+				// North Down South Up
+				// West
 				switch(faceN) {
 					// West
 					case '1.0.0':
