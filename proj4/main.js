@@ -48,11 +48,11 @@ function createScene() {
 	cube = new Cube(100, 100, 100,
 		8, 8, 8,
 		0, 50, 0,
-		new THREE.MeshPhongMaterial({color: 0xff00ff, wireframe: false}),
+		new THREE.MeshPhongMaterial({map: new THREE.TextureLoader().load("textures/rubiks_cube_texture.png"), wireframe: false}),
 		new THREE.MeshBasicMaterial({color: 0xff00ff, wireframe: false})
 	);
 
-	plight = new PointLight(0xffffff, 1, 600, 1, 0, 200, 0);
+	plight = new PointLight(0xffffff, 1, 600, 1, 0, 200, -200);
 
 	dlight = new DirectionalLight(0xffffff, 0.5, 500, 200, 500);
 
