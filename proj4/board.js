@@ -10,6 +10,8 @@ class Board extends GameEntity {
 
 		super(shadedMaterial, basicMaterial);
 
+		var tex;
+
 		this.position.set(x, y, z);
 		this.rotation.x = -Math.PI/2;
 
@@ -21,5 +23,14 @@ class Board extends GameEntity {
 				heightSegments),
 			this.currentMaterial)
 		);
+
+		tex = new THREE.TextureLoader().load(texture);
+		tex.wrapS = THREE.RepeatWrapping;
+		tex.wrapT = THREE.RepeatWrapping;
+		tex.repeat.set(4, 4);
+		tex.anisotropy = 8;
+
+		this.currentMaterial.map = tex;
+		this.otherMaterial.map   = tex;
 	}
 }
