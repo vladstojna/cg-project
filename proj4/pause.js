@@ -3,9 +3,11 @@
 class PauseMessage extends THREE.Object3D {
 
 	/* constructor */
-	constructor(width, height, widthSegments=1, heightSegments=1, material, texture) {
+	constructor(width, height, widthSegments=1, heightSegments=1, material, texture=0) {
 
 		super();
+		
+		this.visibilityFlag = true;
 
 		var tex;
 
@@ -25,5 +27,14 @@ class PauseMessage extends THREE.Object3D {
 		tex.anisotropy = 8;
 		tex.format = THREE.RGBFormat;
 		this.pausePlane.material.map = tex;
+		
+		this.toggleVisibility(this.visibilityFlag);
+	}
+	
+	toggleVisibility(vFlag) {
+		if (this.visibilityFlag != vFlag) {
+			this.visible = vFlag;
+			this.visibilityFlag = vFlag;
+		}
 	}
 }

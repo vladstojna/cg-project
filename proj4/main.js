@@ -1,7 +1,10 @@
 // Main
 
 var scene;
+
 var camera;
+var perspcamera;
+var ortocamera;
 var controls;
 
 var clock;
@@ -14,10 +17,12 @@ var board;
 var cube;
 var plight;
 var dlight;
+var pause;
 
 var flagBallDirection;
 var flagWireframe;
 var flagShaderCompute;
+var flagVisibility;
 var flagPaused;
 var flagRefresh;
 
@@ -76,6 +81,15 @@ function createScene() {
 		DLIGHT_Y,
 		DLIGHT_Z
 	);
+	
+	pause = new PauseMessage(
+		PAUSE_WIDTH,
+		PAUSE_HEIGHT,
+		PAUSE_WSEGS,
+		PAUSE_HSEGS,
+		PAUSE_MATERIAL,
+		PAUSE_TEXTURE
+	);
 
 	//dlight.add(new THREE.DirectionalLightHelper(dlight, 5));
 	//ball.add(new THREE.AxesHelper(100));
@@ -86,10 +100,11 @@ function createScene() {
 	scene.add(cube);
 	scene.add(plight);
 	scene.add(dlight);
+	scene.add(pause);
 }
 
 function createControls() {
-	controls = new THREE.OrbitControls(camera);
+	controls = new THREE.OrbitControls(perspcamera);
 	controls.rotateSpeed = 0.5;
 	controls.autoRotate = true;
 }
@@ -101,7 +116,7 @@ function createOrtographicCamera() {
 	console.log("Width:", width);
 	console.log("Height:", height);
 
-	camera = new THREE.OrthographicCamera(
+	ortocamera = new THREE.OrthographicCamera(
 		ORTO_CAM_L,
 		ORTO_CAM_R,
 		ORTO_CAM_T,
@@ -109,22 +124,23 @@ function createOrtographicCamera() {
 		ORTO_CAM_N,
 		ORTO_CAM_F);
 
-	camera.position.set(ORTO_CAM_X, ORTO_CAM_Y, ORTO_CAM_Z);
-	camera.lookAt(scene.position);
+	ortocamera.position.set(ORTO_CAM_X, ORTO_CAM_Y, ORTO_CAM_Z);
+	ortocamera.lookAt(pause.position);
 }
 
 function createPerspectiveCamera() {
 	width  = window.innerWidth;
 	height = window.innerHeight;
 
-	camera = new THREE.PerspectiveCamera(
+	perspcamera = new THREE.PerspectiveCamera(
 		PERSP_CAM_FOVY,
 		PERSP_CAM_AR,
 		PERSP_CAM_N,
 		PERSP_CAM_F);
 
-	camera.position.set(PERSP_CAM_X, PERSP_CAM_Y, PERSP_CAM_Z);
-	camera.lookAt(scene.position);
+	perspcamera.position.set(PERSP_CAM_X, PERSP_CAM_Y, PERSP_CAM_Z);
+	perspcamera.lookAt(scene.position);
+	camera = perspcamera;
 }
 
 function createClock() {
@@ -160,8 +176,14 @@ function animate() {
 	if (flagPaused && flagRefresh) {
 		controls.reset();
 		ball.resetState();
+		
+		if (flagBallDirection != -1)
+			flagBallDirection *= -1;
+		
 		flagRefresh = !flagRefresh;
 	}
+	
+	pause.toggleVisibility(flagVisibility);
 
 	// Display
 
@@ -179,7 +201,7 @@ function init() {
 	document.body.appendChild(renderer.domElement);
 
 	createScene();
-	//createOrtographicCamera();
+	createOrtographicCamera();
 	createPerspectiveCamera();
 	createControls();
 	createClock();
@@ -187,6 +209,7 @@ function init() {
 	flagWireframe     = false;
 	flagShaderCompute = true;
 	flagBallDirection = -1;
+	flagVisibility    = false;
 	flagPaused        = false;
 	flagRefresh       = false;
 
@@ -226,7 +249,10 @@ function onKeyDown(e) {
 		// Pause
 		case 's':
 		case 'S':
-			flagPaused = !flagPaused;
+			if (flagPaused) camera = perspcamera;
+			else camera = ortocamera;
+			flagPaused     = !flagPaused;
+			flagVisibility = !flagVisibility;
 			break;
 		// Refresh
 		case 'r':
