@@ -70,6 +70,7 @@ function createScene() {
 function createControls() {
 	controls = new THREE.OrbitControls(camera);
 	controls.rotateSpeed = 0.5;
+	controls.autoRotate = true;
 }
 
 function createOrtographicCamera() {
@@ -131,14 +132,15 @@ function animate() {
 		ball.toggleShading(flagShaderCompute);
 		cube.toggleShading(flagShaderCompute);
 		board.toggleShading(flagShaderCompute);
+
+		controls.update();
 	}
 
 	if (flagPaused && flagRefresh) {
 		controls.reset();
-		ball.resetState(flagRefresh);
+		ball.resetState();
+		flagRefresh = !flagRefresh;
 	}
-
-	controls.update();
 
 	// Display
 
@@ -208,7 +210,7 @@ function onKeyDown(e) {
 		// Refresh
 		case 'r':
 		case 'R':
-			flagRefresh = !flagRefresh;
+			if (flagPaused) flagRefresh = !flagRefresh;
 			break;
 	}
 }

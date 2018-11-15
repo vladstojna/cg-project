@@ -12,9 +12,6 @@ class RotatingBall extends GameEntity {
 
 		super(shadedMaterial, basicMaterial);
 
-		/* auto reset flag */
-		this.autoReset = false;
-
 		/* Save initial values for resetting purposes */
 		this.startingRotation = new THREE.Vector3(0, 0, 0);
 		this.startingVelocity = rotationVelocity;
@@ -31,7 +28,7 @@ class RotatingBall extends GameEntity {
 			this.currentMaterial
 		);
 
-		this.sphereMesh.position.z = rotationRadius;
+		this.sphereMesh.position.z = this.rotationRadius;
 
 		this.add(this.sphereMesh);
 
@@ -53,17 +50,16 @@ class RotatingBall extends GameEntity {
 	}
 
 	/* resets ball to initial state */
-	resetState(flag) {
-		if (this.autoReset != flag)
-			this.rotation.set(
-				this.startingRotation.x,
-				this.startingRotation.y,
-				this.startingRotation.z);
-			this.sphereMesh.rotation.set(
-				this.startingRotation.x,
-				this.startingRotation.y,
-				this.startingRotation.z);
-			this.rotationVelocity = this.startingVelocity;
-			this.autoReset = flag;
+	resetState() {
+		this.rotation.set(
+			this.startingRotation.x,
+			this.startingRotation.y,
+			this.startingRotation.z);
+		this.sphereMesh.rotation.set(
+			this.startingRotation.x,
+			this.startingRotation.y,
+			this.startingRotation.z);
+		this.rotationVelocity = this.startingVelocity;
+		this.sphereMesh.position.z = this.rotationRadius;
 	}
 }
