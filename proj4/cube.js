@@ -12,6 +12,7 @@ class Cube extends GameEntity {
 		super(shadedMaterial, basicMaterial);
 
 		var tex;
+		var bmp;
 
 		this.position.set(x, y, z);
 
