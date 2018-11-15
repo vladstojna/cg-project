@@ -32,33 +32,54 @@ function render() {
 function createScene() {
 	scene = new THREE.Scene();
 
-	ball = new RotatingBall(50, 24, 24,
-		new THREE.MeshPhongMaterial({color: 0xff0000, wireframe: false}),
-		new THREE.MeshBasicMaterial({color: 0xff0000, wireframe: false}),
-		0, 50, 0,
-		300, 0, Math.PI/180, Math.PI
+	ball = new RotatingBall(
+		BALL_RADIUS, BALL_WSEGS, BALL_HSEGS,
+		BALL_MATERIAL_PHONG,
+		BALL_MATERIAL_BASIC,
+		BALL_X, BALL_Y, BALL_Z,
+		BALL_ROTATION_RADIUS,
+		BALL_START_VELOCITY, BALL_ACCELERATION, BALL_MAX_VELOCITY,
+		BALL_TEXTURE
 	);
 
-	board = new Board(1000, 1000, 16, 16,
-		0, 0, 0,
-		new THREE.MeshPhongMaterial({color: 0xffff00, wireframe: false}),
-		new THREE.MeshBasicMaterial({color: 0xffff00, wireframe: false})
+	board = new Board(
+		BOARD_WIDTH, BOARD_HEIGHT, BOARD_WSEGS, BOARD_HSEGS,
+		BOARD_X, BOARD_Y, BOARD_Z,
+		BOARD_MATERIAL_LAMBERT,
+		BOARD_MATERIAL_BASIC,
+		BOARD_TEXTURE
 	);
 
-	cube = new Cube(100, 100, 100,
-		8, 8, 8,
-		0, 50, 0,
-		new THREE.MeshPhongMaterial({map: new THREE.TextureLoader().load("textures/rubiks_cube_texture.png"), wireframe: false}),
-		new THREE.MeshBasicMaterial({color: 0xff00ff, wireframe: false})
+	cube = new Cube(
+		CUBE_WIDTH, CUBE_HEIGHT, CUBE_DEPTH, CUBE_WSEGS, CUBE_HSEGS, CUBE_DSEGS,
+		CUBE_X, CUBE_Y, CUBE_Z,
+		CUBE_MATERIAL_PHONG,
+		CUBE_MATERIAL_BASIC,
+		CUBE_TEXTURE,
+		CUBE_BUMP_MAP,
 	);
 
-	plight = new PointLight(0xffffff, 1, 600, 1, 0, 200, -200);
+	plight = new PointLight(
+		POINTLIGHT_COLOR,
+		POINTLIGHT_INT,
+		POINTLIGHT_DIST,
+		POINTLIGHT_DECAY,
+		POINTLIGHT_X,
+		POINTLIGHT_Y,
+		POINTLIGHT_Z
+	);
 
-	dlight = new DirectionalLight(0xffffff, 0.5, 500, 200, 500);
+	dlight = new DirectionalLight(
+		DLIGHT_COLOR,
+		DLIGHT_INT,
+		DLIGHT_X,
+		DLIGHT_Y,
+		DLIGHT_Z
+	);
 
 	//dlight.add(new THREE.DirectionalLightHelper(dlight, 5));
-	ball.add(new THREE.AxesHelper(100));
-	ball.sphereMesh.add(new THREE.AxesHelper(100));
+	//ball.add(new THREE.AxesHelper(100));
+	//ball.sphereMesh.add(new THREE.AxesHelper(100));
 
 	scene.add(ball);
 	scene.add(board);

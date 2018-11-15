@@ -8,9 +8,11 @@ class RotatingBall extends GameEntity {
 			rotationX=0, rotationY=0, rotationZ=0,
 			rotationRadius=0, rotationVelocity=0, rotationAccel=0,
 			maxRotationVelocity=Math.PI,
-			texture=0) {
+			texture) {
 
 		super(shadedMaterial, basicMaterial);
+
+		var tex;
 
 		/* Save initial values for resetting purposes */
 		this.startingRotation = new THREE.Vector3(0, 0, 0);
@@ -31,6 +33,14 @@ class RotatingBall extends GameEntity {
 		this.sphereMesh.position.z = this.rotationRadius;
 
 		this.add(this.sphereMesh);
+
+		tex = new THREE.TextureLoader().load(texture);
+		tex.wrapS = THREE.RepeatWrapping;
+		tex.wrapT = THREE.RepeatWrapping;
+		tex.anisotropy = 8;
+
+		this.currentMaterial.map = tex;
+		this.otherMaterial.map   = tex;
 
 	}
 

@@ -7,9 +7,11 @@ class Cube extends GameEntity {
 			widthSegments, heightSegments, depthSegments,
 			x=0, y=0, z=0,
 			shadedMaterial, basicMaterial,
-			texture=0) {
+			texture, bumpmap) {
 
 		super(shadedMaterial, basicMaterial);
+
+		var tex;
 
 		this.position.set(x, y, z);
 
@@ -22,6 +24,13 @@ class Cube extends GameEntity {
 				heightSegments,
 				depthSegments),
 			this.currentMaterial);
+
+		tex = new THREE.TextureLoader().load(texture);
+		this.currentMaterial.map = tex;
+		this.otherMaterial.map   = tex;
+
+		bmp = new THREE.TextureLoader().load(bumpmap);
+		this.currentMaterial.bumpMap = bmp;
 
 		this.updateUVs(width);
 
@@ -44,8 +53,10 @@ class Cube extends GameEntity {
 			
 			for (let i = 0; i < ids.length; i++) {
 
+				// Get current vertex position
 				var vertexIndex = face[ids[i]];
 				var vertex = geometry.vertices[vertexIndex];
+
 				var uvX, uvY;
 				var dx, dy;
 
