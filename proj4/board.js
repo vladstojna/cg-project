@@ -6,7 +6,7 @@ class Board extends GameEntity {
 	constructor(width, height, widthSegments=1, heightSegments=1,
 			x=0, y=0, z=0,
 			shadedMaterial, basicMaterial,
-			texture=0) {
+			texture) {
 
 		super(shadedMaterial, basicMaterial);
 

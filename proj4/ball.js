@@ -8,7 +8,7 @@ class RotatingBall extends GameEntity {
 			rotationX=0, rotationY=0, rotationZ=0,
 			rotationRadius=0, rotationVelocity=0, rotationAccel=0,
 			maxRotationVelocity=Math.PI,
-			texture=0) {
+			texture) {
 
 		super(shadedMaterial, basicMaterial);
 
