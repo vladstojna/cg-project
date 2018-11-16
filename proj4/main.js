@@ -1,6 +1,7 @@
 // Main
 
 var scene;
+var pauseScene;
 
 var camPerspective;
 var camOrthographic;
@@ -27,15 +28,14 @@ var flagRefresh;
 
 //------------------------------------------------------------------------------
 
-function render(camera) {
+function render(scene, camera) {
 	renderer.render(scene, camera);
 }
 
 //------------------------------------------------------------------------------
 
 function createRenderer() {
-	renderer = new THREE.WebGLRenderer({antialias: true, alpha: false});
-	//renderer.setClearColor(0x0, 1);
+	renderer = new THREE.WebGLRenderer({antialias: true});
 	renderer.setSize(window.innerWidth, window.innerHeight);
 	renderer.autoClear = false;
 	document.body.appendChild(renderer.domElement);
@@ -107,7 +107,6 @@ function createScene() {
 	scene.add(cube);
 	scene.add(plight);
 	scene.add(dlight);
-	scene.add(pause);
 }
 
 function createControls() {
@@ -189,10 +188,16 @@ function animate() {
 	pause.toggleVisibility(flagVisibility);
 
 	// Display
-	if (flagPaused)
-		render(camOrthographic);
-	else
-		render(camPerspective);
+	if (flagPaused) {
+		renderer.setViewport(
+			window.innerWidth/2 - PAUSE_WIDTH/2,
+			PAUSE_HEIGHT/2,
+			PAUSE_WIDTH,
+			PAUSE_HEIGHT);
+		render(pause, camOrthographic);
+	}
+	renderer.setViewport(0, 0, window.innerWidth, window.innerHeight);
+	render(scene, camPerspective);
 
 	requestAnimationFrame(animate);
 }
@@ -218,7 +223,7 @@ function init() {
 	flagPaused        = false;
 	flagRefresh       = false;
 
-	render(camPerspective);
+	render(scene, camPerspective);
 
 	window.addEventListener("keydown", onKeyDown);
 	window.addEventListener("resize",  onResize);

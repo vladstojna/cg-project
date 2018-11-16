@@ -1,5 +1,17 @@
 // List of constants
 
+/* Pause screen constants */
+/* --------------------------------------------------------------- */
+
+const PAUSE_WIDTH  = 512;
+const PAUSE_HEIGHT = 128;
+const PAUSE_WSEGS  = 1;
+const PAUSE_HSEGS  = 1;
+
+const PAUSE_MATERIAL = new THREE.MeshBasicMaterial({
+	color: 0xffffff,
+	wireframe: false});
+
 /* Ortographic camera constants constants
  * ORTO_CAM_L - ortographic camera left
  * ORTO_CAM_R - ortographic camera right
@@ -11,15 +23,15 @@
  * ORTO_CAM_Y - ortographic camera y position
  * ORTO_CAM_Z - ortographic camera z position
  */
-const ORTO_CAM_L = window.innerWidth  / -2;
-const ORTO_CAM_R = window.innerWidth  /  2;
-const ORTO_CAM_T = window.innerHeight /  2;
-const ORTO_CAM_B = window.innerHeight / -2;
-const ORTO_CAM_N = 10;
-const ORTO_CAM_F = 5000;
+const ORTO_CAM_L = PAUSE_WIDTH  / -2;
+const ORTO_CAM_R = PAUSE_WIDTH  /  2;
+const ORTO_CAM_T = PAUSE_HEIGHT /  2;
+const ORTO_CAM_B = PAUSE_HEIGHT / -2;
+const ORTO_CAM_N = 1;
+const ORTO_CAM_F = 10;
 const ORTO_CAM_X = 0;
-const ORTO_CAM_Y = 500;
-const ORTO_CAM_Z = 500;
+const ORTO_CAM_Y = 0;
+const ORTO_CAM_Z = 1;
 
 /* Perspective camera constants constants
  * PERSP_CAM_FOVY - perspective camera vertical fov
@@ -37,18 +49,6 @@ const PERSP_CAM_F    = 5000;
 const PERSP_CAM_X    = 500;
 const PERSP_CAM_Y    = 500;
 const PERSP_CAM_Z    = 500;
-
-/* Pause screen constants */
-/* --------------------------------------------------------------- */
-
-const PAUSE_WIDTH  = 988;
-const PAUSE_HEIGHT = 158;
-const PAUSE_WSEGS  = 1;
-const PAUSE_HSEGS  = 1;
-
-const PAUSE_MATERIAL = new THREE.MeshBasicMaterial({
-	color: 0xffffff,
-	wireframe: false});
 
 /* Game entity constants */
 /* --------------------------------------------------------------- */
