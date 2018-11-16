@@ -140,39 +140,37 @@ function scaleScene(scene, oldSize, newSize) {
 
 //------------------------------------------------------------------------------
 
-function animate(renderer, clock, GAME, flags) {
+function animate(renderer, clock, GAME, FLAGS) {
 	// Update
 	var delta = clock.getDelta();
 
-	if (!flags.Paused) {
-		GAME.ball.rotate(delta, flags.BallDirection);
+	if (!FLAGS.Paused) {
+		GAME.ball.rotate(delta, FLAGS.BallDirection);
 
-		GAME.ball.toggleWireframe(flags.Wireframe);
-		GAME.cube.toggleWireframe(flags.Wireframe);
-		GAME.board.toggleWireframe(flags.Wireframe);
+		GAME.ball.toggleWireframe(FLAGS.Wireframe);
+		GAME.cube.toggleWireframe(FLAGS.Wireframe);
+		GAME.board.toggleWireframe(FLAGS.Wireframe);
 
-		GAME.ball.toggleShading(flags.ShaderCompute);
-		GAME.cube.toggleShading(flags.ShaderCompute);
-		GAME.board.toggleShading(flags.ShaderCompute);
+		GAME.ball.toggleShading(FLAGS.ShaderCompute);
+		GAME.cube.toggleShading(FLAGS.ShaderCompute);
+		GAME.board.toggleShading(FLAGS.ShaderCompute);
 
-		GAME.dlight.switchLight(flags.DirecLight);
-		GAME.plight.switchLight(flags.PointLight);
+		GAME.dlight.switchLight(FLAGS.DirecLight);
+		GAME.plight.switchLight(FLAGS.PointLight);
 
 		GAME.orbitControls.update();
 	}
 
-	if (flags.Refresh) {
+	if (FLAGS.Refresh) {
 		GAME.orbitControls.reset();
 		GAME.ball.resetState();
-		
-		if (flags.BallDirection != -1)
-			flags.BallDirection *= -1;
-		
-		flags.Refresh = !flags.Paused;
+
+		FLAGS.BallDirection = -1;
+		FLAGS.Refresh = !FLAGS.Paused;
 	}
 
 	// Display
-	if (flags.Paused) {
+	if (FLAGS.Paused) {
 		renderer.setViewport(
 			window.innerWidth/2 - PAUSE_WIDTH/2,
 			PAUSE_HEIGHT/2,
@@ -185,7 +183,7 @@ function animate(renderer, clock, GAME, flags) {
 
 	// Prepares next frame
 	requestAnimationFrame(function() {
-		animate(renderer, clock, GAME, flags)
+		animate(renderer, clock, GAME, FLAGS)
 	});
 }
 
@@ -237,7 +235,7 @@ function init() {
 		pause
 	};
 
-	var flags = {
+	var FLAGS = {
 		Wireframe     : false,
 		ShaderCompute : true,
 		BallDirection : -1,
@@ -250,12 +248,12 @@ function init() {
 	// Start game
 
 	renderer.render(gameScene, camPerspective);
-	animate(renderer, clock, GAME, flags);
+	animate(renderer, clock, GAME, FLAGS);
 
 	// Event listeners
 
 	window.addEventListener("keydown", function(e) {
-		onKeyDown(e, flags);
+		onKeyDown(e, FLAGS);
 	});
 
 	window.addEventListener("resize", function() {
@@ -264,42 +262,42 @@ function init() {
 	});
 }
 
-function onKeyDown(e, flags) {
+function onKeyDown(e, FLAGS) {
 	switch(e.key) {
 		// Toggle directional light
 		case 'd':
 		case 'D':
-			flags.DirecLight = !flags.DirecLight;
+			FLAGS.DirecLight = !FLAGS.DirecLight;
 			break;
 		// Toggle point light
 		case 'p':
 		case 'P':
-			flags.PointLight = !flags.PointLight;
+			FLAGS.PointLight = !FLAGS.PointLight;
 			break;
 		// Toggle wireframe
 		case 'w':
 		case 'W':
-			flags.Wireframe = !flags.Wireframe;
+			FLAGS.Wireframe = !FLAGS.Wireframe;
 			break;
 		// Toggle shading
 		case 'l':
 		case 'L':
-			flags.ShaderCompute = !flags.ShaderCompute;
+			FLAGS.ShaderCompute = !FLAGS.ShaderCompute;
 			break;
 		// Control ball movement
 		case 'b':
 		case 'B':
-			flags.BallDirection *= -1;
+			FLAGS.BallDirection *= -1;
 			break;
 		// Pause
 		case 's':
 		case 'S':
-			flags.Paused = !flags.Paused;
+			FLAGS.Paused = !FLAGS.Paused;
 			break;
 		// Refresh
 		case 'r':
 		case 'R':
-			flags.Refresh = flags.Paused;
+			FLAGS.Refresh = FLAGS.Paused;
 			break;
 	}
 }
