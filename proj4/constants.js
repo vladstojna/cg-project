@@ -133,7 +133,7 @@ const DLIGHT_X = 500;
 const DLIGHT_Y = 200;
 const DLIGHT_Z = 500;
 
-/* Texture paths */
+/* Texture constants */
 /* --------------------------------------------------------------- */
 
 const BALL_TEXTURE  = "textures/billiard_ball_texture.jpg";
@@ -141,3 +141,7 @@ const BOARD_TEXTURE = "textures/chessboard_texture_wood.png";
 const CUBE_TEXTURE  = "textures/rubiks_cube_texture.png";
 const CUBE_BUMP_MAP = "textures/rubiks_cube_bump_map.png";
 const PAUSE_TEXTURE = "textures/pause_text.png"
+
+const BOARD_REPEAT_U = 4;
+const BOARD_REPEAT_V = 4;
+const ANISO_SAMPLES  = 8;
