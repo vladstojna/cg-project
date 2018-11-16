@@ -65,10 +65,12 @@ class RotatingBall extends GameEntity {
 			this.startingRotation.x,
 			this.startingRotation.y,
 			this.startingRotation.z);
+
 		this.sphereMesh.rotation.set(
 			this.startingRotation.x,
 			this.startingRotation.y,
 			this.startingRotation.z);
+
 		this.rotationVelocity = this.startingVelocity;
 		this.sphereMesh.position.z = this.rotationRadius;
 	}
