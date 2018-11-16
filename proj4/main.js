@@ -1,281 +1,314 @@
 // Main
-
-var scene;
-var pauseScene;
-
-var camPerspective;
-var camOrthographic;
-var controls;
-
-var clock;
-
-var width;
-var height;
-
-var ball;
-var board;
-var cube;
-var plight;
-var dlight;
-var pause;
-
-var flagBallDirection;
-var flagWireframe;
-var flagShaderCompute;
-var flagVisibility;
-var flagPaused;
-var flagRefresh;
-
 //------------------------------------------------------------------------------
 
-function render(scene, camera) {
-	renderer.render(scene, camera);
-}
+var CREATION = {
+	createRenderer() {
+		var renderer = new THREE.WebGLRenderer({antialias: true});
+		renderer.setSize(window.innerWidth, window.innerHeight);
+		renderer.autoClear = false;
+		document.body.appendChild(renderer.domElement);
+		return renderer;
+	},
 
-//------------------------------------------------------------------------------
+	createScene() {
+		return new THREE.Scene();
+	},
 
-function createRenderer() {
-	renderer = new THREE.WebGLRenderer({antialias: true});
-	renderer.setSize(window.innerWidth, window.innerHeight);
-	renderer.autoClear = false;
-	document.body.appendChild(renderer.domElement);
-}
+	createBall(parent) {
+		var ball = new RotatingBall(
+			BALL_RADIUS, BALL_WSEGS, BALL_HSEGS,
+			BALL_MATERIAL_PHONG,
+			BALL_MATERIAL_BASIC,
+			BALL_X, BALL_Y, BALL_Z,
+			BALL_ROTATION_RADIUS,
+			BALL_START_VELOCITY, BALL_ACCELERATION, BALL_MAX_VELOCITY,
+			BALL_TEXTURE
+		);
+		parent.add(ball);
+		return ball;
+	},
 
-function createScene() {
-	scene = new THREE.Scene();
+	createBoard(parent) {
+		var board = new Board(
+			BOARD_WIDTH, BOARD_HEIGHT, BOARD_WSEGS, BOARD_HSEGS,
+			BOARD_X, BOARD_Y, BOARD_Z,
+			BOARD_MATERIAL_LAMBERT,
+			BOARD_MATERIAL_BASIC,
+			BOARD_TEXTURE
+		);
+		parent.add(board);
+		return board;
+	},
 
-	ball = new RotatingBall(
-		BALL_RADIUS, BALL_WSEGS, BALL_HSEGS,
-		BALL_MATERIAL_PHONG,
-		BALL_MATERIAL_BASIC,
-		BALL_X, BALL_Y, BALL_Z,
-		BALL_ROTATION_RADIUS,
-		BALL_START_VELOCITY, BALL_ACCELERATION, BALL_MAX_VELOCITY,
-		BALL_TEXTURE
-	);
+	createCube(parent) {
+		var cube = new Cube(
+			CUBE_WIDTH, CUBE_HEIGHT, CUBE_DEPTH,
+			CUBE_WSEGS, CUBE_HSEGS, CUBE_DSEGS,
+			CUBE_X, CUBE_Y, CUBE_Z,
+			CUBE_MATERIAL_PHONG,
+			CUBE_MATERIAL_BASIC,
+			CUBE_TEXTURE,
+			CUBE_BUMP_MAP,
+		);
+		parent.add(cube);
+		return cube;
+	},
 
-	board = new Board(
-		BOARD_WIDTH, BOARD_HEIGHT, BOARD_WSEGS, BOARD_HSEGS,
-		BOARD_X, BOARD_Y, BOARD_Z,
-		BOARD_MATERIAL_LAMBERT,
-		BOARD_MATERIAL_BASIC,
-		BOARD_TEXTURE
-	);
-
-	cube = new Cube(
-		CUBE_WIDTH, CUBE_HEIGHT, CUBE_DEPTH, CUBE_WSEGS, CUBE_HSEGS, CUBE_DSEGS,
-		CUBE_X, CUBE_Y, CUBE_Z,
-		CUBE_MATERIAL_PHONG,
-		CUBE_MATERIAL_BASIC,
-		CUBE_TEXTURE,
-		CUBE_BUMP_MAP,
-	);
-
-	plight = new PointLight(
-		POINTLIGHT_COLOR,
-		POINTLIGHT_INT,
-		POINTLIGHT_DIST,
-		POINTLIGHT_DECAY,
-		POINTLIGHT_X,
-		POINTLIGHT_Y,
-		POINTLIGHT_Z
-	);
-
-	dlight = new DirectionalLight(
-		DLIGHT_COLOR,
-		DLIGHT_INT,
-		DLIGHT_X,
-		DLIGHT_Y,
-		DLIGHT_Z
-	);
+	createPointLight(parent) {
+		var plight = new PointLight(
+			POINTLIGHT_COLOR,
+			POINTLIGHT_INT,
+			POINTLIGHT_DIST,
+			POINTLIGHT_DECAY,
+			POINTLIGHT_X,
+			POINTLIGHT_Y,
+			POINTLIGHT_Z
+		);
+		parent.add(plight);
+		return plight;
+	},
 	
-	pause = new PauseMessage(
-		PAUSE_WIDTH,
-		PAUSE_HEIGHT,
-		PAUSE_WSEGS,
-		PAUSE_HSEGS,
-		PAUSE_MATERIAL,
-		PAUSE_TEXTURE
-	);
+	createDirectionalLight(parent) {
+		var dlight = new DirectionalLight(
+			DLIGHT_COLOR,
+			DLIGHT_INT,
+			DLIGHT_X,
+			DLIGHT_Y,
+			DLIGHT_Z
+		);
+		parent.add(dlight);
+		return dlight;
+	},
+	
+	createPauseMessage(parent) {
+		var pause = new PauseMessage(
+			PAUSE_WIDTH,
+			PAUSE_HEIGHT,
+			PAUSE_WSEGS,
+			PAUSE_HSEGS,
+			PAUSE_MATERIAL,
+			PAUSE_TEXTURE
+		);
+		parent.add(pause);
+		return pause;
+	},
+	
+	createControls(camera, rotationSpeed, autoRotation) {
+		var controls = new THREE.OrbitControls(camera);
+		controls.rotateSpeed = rotationSpeed;
+		controls.autoRotate  = autoRotation;
+		return controls;
+	},
+	
+	createOrtographicCamera(lookAtPosition) {
+		var cam = new THREE.OrthographicCamera(
+			ORTO_CAM_L,
+			ORTO_CAM_R,
+			ORTO_CAM_T,
+			ORTO_CAM_B,
+			ORTO_CAM_N,
+			ORTO_CAM_F);
+	
+		cam.position.set(ORTO_CAM_X, ORTO_CAM_Y, ORTO_CAM_Z);
+		cam.lookAt(lookAtPosition);
+	
+		return cam;
+	},
+	
+	createPerspectiveCamera(lookAtPosition) {
+		var cam = new THREE.PerspectiveCamera(
+			PERSP_CAM_FOVY,
+			PERSP_CAM_AR,
+			PERSP_CAM_N,
+			PERSP_CAM_F);
+	
+		cam.position.set(PERSP_CAM_X, PERSP_CAM_Y, PERSP_CAM_Z);
+		cam.lookAt(lookAtPosition);
+	
+		return cam;
+	},
+	
+	createClock() {
+		return new THREE.Clock();
+	}
+};
 
-	//dlight.add(new THREE.DirectionalLightHelper(dlight, 5));
-	//ball.add(new THREE.AxesHelper(100));
-	//ball.sphereMesh.add(new THREE.AxesHelper(100));
-
-	scene.add(ball);
-	scene.add(board);
-	scene.add(cube);
-	scene.add(plight);
-	scene.add(dlight);
-}
-
-function createControls() {
-	controls = new THREE.OrbitControls(camPerspective);
-	controls.rotateSpeed = 0.25;
-	controls.autoRotate = true;
-}
-
-function createOrtographicCamera() {
-	width  = window.innerWidth;
-	height = window.innerHeight;
-
-	camOrthographic = new THREE.OrthographicCamera(
-		ORTO_CAM_L,
-		ORTO_CAM_R,
-		ORTO_CAM_T,
-		ORTO_CAM_B,
-		ORTO_CAM_N,
-		ORTO_CAM_F);
-
-	camOrthographic.position.set(ORTO_CAM_X, ORTO_CAM_Y, ORTO_CAM_Z);
-	camOrthographic.lookAt(pause.position);
-}
-
-function createPerspectiveCamera() {
-	width  = window.innerWidth;
-	height = window.innerHeight;
-
-	camPerspective = new THREE.PerspectiveCamera(
-		PERSP_CAM_FOVY,
-		PERSP_CAM_AR,
-		PERSP_CAM_N,
-		PERSP_CAM_F);
-
-	camPerspective.position.set(PERSP_CAM_X, PERSP_CAM_Y, PERSP_CAM_Z);
-	camPerspective.lookAt(scene.position);
-}
-
-function createClock() {
-	clock = new THREE.Clock();
-}
-
-function scaleScene(oldSize, newSize) {
+function scaleScene(scene, oldSize, newSize) {
 	var mult = newSize / oldSize;
 	scene.scale.set(mult, mult, mult);
 }
 
 //------------------------------------------------------------------------------
 
-function animate() {
+function animate(renderer, clock, GAME, flags) {
 	// Update
-
 	var delta = clock.getDelta();
 
-	if (!flagPaused) {
-		ball.rotate(delta, flagBallDirection);
+	if (!flags.Paused) {
+		GAME.ball.rotate(delta, flags.BallDirection);
 
-		ball.toggleWireframe(flagWireframe);
-		cube.toggleWireframe(flagWireframe);
-		board.toggleWireframe(flagWireframe);
+		GAME.ball.toggleWireframe(flags.Wireframe);
+		GAME.cube.toggleWireframe(flags.Wireframe);
+		GAME.board.toggleWireframe(flags.Wireframe);
 
-		ball.toggleShading(flagShaderCompute);
-		cube.toggleShading(flagShaderCompute);
-		board.toggleShading(flagShaderCompute);
+		GAME.ball.toggleShading(flags.ShaderCompute);
+		GAME.cube.toggleShading(flags.ShaderCompute);
+		GAME.board.toggleShading(flags.ShaderCompute);
 
-		controls.update();
+		GAME.dlight.switchLight(flags.DirecLight);
+		GAME.plight.switchLight(flags.PointLight);
+
+		GAME.orbitControls.update();
 	}
 
-	if (flagPaused && flagRefresh) {
-		controls.reset();
-		ball.resetState();
+	if (flags.Refresh) {
+		GAME.orbitControls.reset();
+		GAME.ball.resetState();
 		
-		if (flagBallDirection != -1)
-			flagBallDirection *= -1;
+		if (flags.BallDirection != -1)
+			flags.BallDirection *= -1;
 		
-		flagRefresh = !flagRefresh;
+		flags.Refresh = !flags.Paused;
 	}
 
 	// Display
-	if (flagPaused) {
+	if (flags.Paused) {
 		renderer.setViewport(
 			window.innerWidth/2 - PAUSE_WIDTH/2,
 			PAUSE_HEIGHT/2,
 			PAUSE_WIDTH,
 			PAUSE_HEIGHT);
-		render(pause, camOrthographic);
+		renderer.render(GAME.pauseScene, GAME.camOrthographic);
 	}
 	renderer.setViewport(0, 0, window.innerWidth, window.innerHeight);
-	render(scene, camPerspective);
+	renderer.render(GAME.gameScene, GAME.camPerspective);
 
-	requestAnimationFrame(animate);
+	// Prepares next frame
+	requestAnimationFrame(function() {
+		animate(renderer, clock, GAME, flags)
+	});
 }
 
 //------------------------------------------------------------------------------
 
 function init() {
 
-	console.log("Width:", window.innerWidth);
-	console.log("Height:", window.innerHeight);
+	// Register initial width and height
 
-	createRenderer();
-	createScene();
-	createOrtographicCamera();
-	createPerspectiveCamera();
-	createControls();
-	createClock();
+	var width  = window.innerWidth;
+	var height = window.innerHeight;
 
-	flagWireframe     = false;
-	flagShaderCompute = true;
-	flagBallDirection = -1;
-	flagVisibility    = false;
-	flagPaused        = false;
-	flagRefresh       = false;
+	console.log("Width:", width);
+	console.log("Height:", height);
 
-	render(scene, camPerspective);
+	// Create game entities
 
-	window.addEventListener("keydown", onKeyDown);
-	window.addEventListener("resize",  onResize);
+	var renderer   = CREATION.createRenderer();
+	var clock      = CREATION.createClock();
+	var gameScene  = CREATION.createScene();
+	var pauseScene = CREATION.createScene();
+
+	var camPerspective  = CREATION.createPerspectiveCamera(gameScene.position);
+	var camOrthographic = CREATION.createOrtographicCamera(pauseScene.position);
+	var orbitControls   = CREATION.createControls(camPerspective, 0.25, true);
+
+	var ball   = CREATION.createBall(gameScene);
+	var board  = CREATION.createBoard(gameScene);
+	var cube   = CREATION.createCube(gameScene);
+
+	var plight = CREATION.createPointLight(gameScene);
+	var dlight = CREATION.createDirectionalLight(gameScene);
+
+	var pause  = CREATION.createPauseMessage(pauseScene);
+
+	// Create Wrappers
+
+	var GAME = {
+		gameScene,
+		pauseScene,
+		camPerspective,
+		camOrthographic,
+		ball,
+		board,
+		cube,
+		plight,
+		dlight,
+		orbitControls,
+		pause
+	};
+
+	var flags = {
+		Wireframe     : false,
+		ShaderCompute : true,
+		BallDirection : -1,
+		Paused        : false,
+		Refresh       : false,
+		DirecLight    : true,
+		PointLight    : true
+	};
+
+	// Start game
+
+	renderer.render(gameScene, camPerspective);
+	animate(renderer, clock, GAME, flags);
+
+	// Event listeners
+
+	window.addEventListener("keydown", function(e) {
+		onKeyDown(e, flags);
+	});
+
+	window.addEventListener("resize", function() {
+		onResize(renderer, camPerspective, window.innerWidth, window.innerHeight);
+		scaleScene(gameScene, width, window.innerWidth);
+	});
 }
 
-function onKeyDown(e) {
+function onKeyDown(e, flags) {
 	switch(e.key) {
 		// Toggle directional light
 		case 'd':
 		case 'D':
-			dlight.visible = !dlight.visible;
+			flags.DirecLight = !flags.DirecLight;
 			break;
 		// Toggle point light
 		case 'p':
 		case 'P':
-			plight.visible = !plight.visible;
+			flags.PointLight = !flags.PointLight;
 			break;
 		// Toggle wireframe
 		case 'w':
 		case 'W':
-			flagWireframe = !flagWireframe;
+			flags.Wireframe = !flags.Wireframe;
 			break;
 		// Toggle shading
 		case 'l':
 		case 'L':
-			flagShaderCompute = !flagShaderCompute;
+			flags.ShaderCompute = !flags.ShaderCompute;
 			break;
 		// Control ball movement
 		case 'b':
 		case 'B':
-			flagBallDirection *= -1;
+			flags.BallDirection *= -1;
 			break;
 		// Pause
 		case 's':
 		case 'S':
-			flagPaused     = !flagPaused;
-			flagVisibility = !flagVisibility;
+			flags.Paused = !flags.Paused;
 			break;
 		// Refresh
 		case 'r':
 		case 'R':
-			if (flagPaused) flagRefresh = !flagRefresh;
+			flags.Refresh = flags.Paused;
 			break;
 	}
 }
 
-function onResize() {
-	renderer.setSize(window.innerWidth, window.innerHeight);
+function onResize(renderer, camera, newW, newH) {
+	renderer.setSize(newW, newH);
 
-	if (window.innerWidth > 0 && window.innerHeight > 0) {
-
-		camPerspective.aspect = window.innerWidth / window.innerHeight;
-		camPerspective.updateProjectionMatrix();
-
-		scaleScene(width, window.innerWidth);
+	if (newW > 0 && newH > 0) {
+		camera.aspect = newW / newH;
+		camera.updateProjectionMatrix();
 	}
 }
