@@ -7,4 +7,9 @@ class DirectionalLight extends THREE.DirectionalLight {
 		super(color, intensity);
 		this.position.set(x, y, z);
 	}
+
+	switchLight(flag) {
+		this.visible = flag;
+	}
+
 }
