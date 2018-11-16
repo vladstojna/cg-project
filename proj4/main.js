@@ -34,6 +34,13 @@ function render() {
 
 //------------------------------------------------------------------------------
 
+function createRenderer() {
+	renderer = new THREE.WebGLRenderer({antialias: true, alpha: true});
+	renderer.setClearColor(0x0, 1);
+	renderer.setSize(window.innerWidth, window.innerHeight);
+	document.body.appendChild(renderer.domElement);
+}
+
 function createScene() {
 	scene = new THREE.Scene();
 
@@ -195,11 +202,8 @@ function animate() {
 //------------------------------------------------------------------------------
 
 function init() {
-	renderer = new THREE.WebGLRenderer({antialias: true});
-	renderer.setSize(window.innerWidth, window.innerHeight);
 
-	document.body.appendChild(renderer.domElement);
-
+	createRenderer();
 	createScene();
 	createOrtographicCamera();
 	createPerspectiveCamera();
