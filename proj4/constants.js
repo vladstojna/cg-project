@@ -42,32 +42,32 @@ const ORTO_CAM_Z = 1;
  * PERSP_CAM_Y    - perspective camera y position
  * PERSP_CAM_Z    - perspective camera z position
  */
-const PERSP_CAM_FOVY = 90;
+const PERSP_CAM_FOVY = 80;
 const PERSP_CAM_AR   = window.innerWidth / window.innerHeight;
 const PERSP_CAM_N    = 1;
 const PERSP_CAM_F    = 5000;
-const PERSP_CAM_X    = 500;
-const PERSP_CAM_Y    = 500;
-const PERSP_CAM_Z    = 500;
+const PERSP_CAM_X    = 1000;
+const PERSP_CAM_Y    = 1000;
+const PERSP_CAM_Z    = 1000;
 
 /* Game entity constants */
 /* --------------------------------------------------------------- */
 
-const BALL_RADIUS = 50;
-const BALL_WSEGS  = 24;
-const BALL_HSEGS  = 24;
+const BALL_RADIUS = 75;
+const BALL_WSEGS  = 32;
+const BALL_HSEGS  = 32;
 
-const BALL_X = 0;
+const BALL_X = -40;
 const BALL_Y = BALL_RADIUS;
-const BALL_Z = 0;
+const BALL_Z = -40;
 
-const BALL_ROTATION_RADIUS = 300;
+const BALL_ROTATION_RADIUS = 400;
 const BALL_START_VELOCITY  = 0;
 const BALL_ACCELERATION    = Math.PI/180;
 const BALL_MAX_VELOCITY    = Math.PI;
 
 const BALL_MATERIAL_PHONG = new THREE.MeshPhongMaterial({
-	specular: 0xf7f3d7, // light yellow
+	specular: 0x303030, // grey
 	shininess: 75,
 	wireframe: false});
 
@@ -76,7 +76,7 @@ const BALL_MATERIAL_BASIC = new THREE.MeshBasicMaterial({
 
 /* --------------------------------------------------------------- */
 
-const BOARD_WIDTH  = 1000;
+const BOARD_WIDTH  = 1200;
 const BOARD_HEIGHT = BOARD_WIDTH;
 const BOARD_WSEGS  = 16;
 const BOARD_HSEGS  = 16;
@@ -93,20 +93,20 @@ const BOARD_MATERIAL_BASIC = new THREE.MeshBasicMaterial({
 
 /* --------------------------------------------------------------- */
 
-const CUBE_WIDTH  = 100;
+const CUBE_WIDTH  = 200;
 const CUBE_HEIGHT = CUBE_WIDTH;
 const CUBE_DEPTH  = CUBE_WIDTH;
 const CUBE_WSEGS  = 8;
 const CUBE_HSEGS  = 8;
 const CUBE_DSEGS  = 8;
 
-const CUBE_X = 0;
+const CUBE_X = 40;
 const CUBE_Y = CUBE_HEIGHT / 2;
-const CUBE_Z = 0;
+const CUBE_Z = 40;
 
 const CUBE_MATERIAL_PHONG = new THREE.MeshPhongMaterial({
-	specular: 0xf2f2f2, // light grey
-	shininess: 5,
+	specular: 0x202020, // grey
+	shininess: 30,
 	wireframe: false});
 
 const CUBE_MATERIAL_BASIC = new THREE.MeshBasicMaterial({
@@ -117,20 +117,20 @@ const CUBE_MATERIAL_BASIC = new THREE.MeshBasicMaterial({
 
 const POINTLIGHT_COLOR = 0xffffff;
 const POINTLIGHT_INT   = 1;
-const POINTLIGHT_DIST  = 600;
+const POINTLIGHT_DIST  = 650;
 const POINTLIGHT_DECAY = 1;
 
-const POINTLIGHT_X = 0;
-const POINTLIGHT_Y = 200;
-const POINTLIGHT_Z = 0;
+const POINTLIGHT_X = -100;
+const POINTLIGHT_Y = 250;
+const POINTLIGHT_Z = -100;
 
 /* --------------------------------------------------------------- */
 
 const DLIGHT_COLOR = 0xffffff;
-const DLIGHT_INT   = 0.5;
+const DLIGHT_INT   = 0.6;
 
 const DLIGHT_X = 500;
-const DLIGHT_Y = 200;
+const DLIGHT_Y = 500;
 const DLIGHT_Z = 500;
 
 /* Texture constants */
@@ -142,6 +142,6 @@ const CUBE_TEXTURE  = "textures/rubiks_cube_texture.png";
 const CUBE_BUMP_MAP = "textures/rubiks_cube_bump_map.png";
 const PAUSE_TEXTURE = "textures/pause_text.png"
 
-const BOARD_REPEAT_U = 4;
-const BOARD_REPEAT_V = 4;
+const BOARD_REPEAT_U = 6;
+const BOARD_REPEAT_V = 6;
 const ANISO_SAMPLES  = 8;
