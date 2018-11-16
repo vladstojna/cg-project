@@ -29,12 +29,12 @@ class Cube extends GameEntity {
 		this.add(this.cubeMesh);
 
 		tex = new THREE.TextureLoader().load(texture);
-		tex.anisotropy = 8;
+		tex.anisotropy = ANISO_SAMPLES;
 		this.currentMaterial.map = tex;
 		this.otherMaterial.map   = tex;
 
 		bmp = new THREE.TextureLoader().load(bumpmap);
-		bmp.anisotropy = 8;
+		bmp.anisotropy = ANISO_SAMPLES;
 		this.currentMaterial.bumpMap = bmp;
 
 		this.updateUVs(width);

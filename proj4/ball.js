@@ -37,7 +37,7 @@ class RotatingBall extends GameEntity {
 		tex = new THREE.TextureLoader().load(texture);
 		tex.wrapS = THREE.RepeatWrapping;
 		tex.wrapT = THREE.RepeatWrapping;
-		tex.anisotropy = 8;
+		tex.anisotropy = ANISO_SAMPLES;
 
 		this.currentMaterial.map = tex;
 		this.otherMaterial.map   = tex;

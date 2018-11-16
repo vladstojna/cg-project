@@ -27,8 +27,8 @@ class Board extends GameEntity {
 		tex = new THREE.TextureLoader().load(texture);
 		tex.wrapS = THREE.RepeatWrapping;
 		tex.wrapT = THREE.RepeatWrapping;
-		tex.repeat.set(4, 4);
-		tex.anisotropy = 8;
+		tex.repeat.set(BOARD_REPEAT_U, BOARD_REPEAT_V);
+		tex.anisotropy = ANISO_SAMPLES;
 
 		this.currentMaterial.map = tex;
 		this.otherMaterial.map   = tex;
