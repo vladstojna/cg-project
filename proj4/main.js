@@ -2,9 +2,8 @@
 
 var scene;
 
-var camera;
-var perspcamera;
-var ortocamera;
+var camPerspective;
+var camOrthographic;
 var controls;
 
 var clock;
@@ -28,16 +27,17 @@ var flagRefresh;
 
 //------------------------------------------------------------------------------
 
-function render() {
+function render(camera) {
 	renderer.render(scene, camera);
 }
 
 //------------------------------------------------------------------------------
 
 function createRenderer() {
-	renderer = new THREE.WebGLRenderer({antialias: true, alpha: true});
-	renderer.setClearColor(0x0, 1);
+	renderer = new THREE.WebGLRenderer({antialias: true, alpha: false});
+	//renderer.setClearColor(0x0, 1);
 	renderer.setSize(window.innerWidth, window.innerHeight);
+	renderer.autoClear = false;
 	document.body.appendChild(renderer.domElement);
 }
 
@@ -111,7 +111,7 @@ function createScene() {
 }
 
 function createControls() {
-	controls = new THREE.OrbitControls(perspcamera);
+	controls = new THREE.OrbitControls(camPerspective);
 	controls.rotateSpeed = 0.5;
 	controls.autoRotate = true;
 }
@@ -120,10 +120,7 @@ function createOrtographicCamera() {
 	width  = window.innerWidth;
 	height = window.innerHeight;
 
-	console.log("Width:", width);
-	console.log("Height:", height);
-
-	ortocamera = new THREE.OrthographicCamera(
+	camOrthographic = new THREE.OrthographicCamera(
 		ORTO_CAM_L,
 		ORTO_CAM_R,
 		ORTO_CAM_T,
@@ -131,23 +128,22 @@ function createOrtographicCamera() {
 		ORTO_CAM_N,
 		ORTO_CAM_F);
 
-	ortocamera.position.set(ORTO_CAM_X, ORTO_CAM_Y, ORTO_CAM_Z);
-	ortocamera.lookAt(pause.position);
+	camOrthographic.position.set(ORTO_CAM_X, ORTO_CAM_Y, ORTO_CAM_Z);
+	camOrthographic.lookAt(pause.position);
 }
 
 function createPerspectiveCamera() {
 	width  = window.innerWidth;
 	height = window.innerHeight;
 
-	perspcamera = new THREE.PerspectiveCamera(
+	camPerspective = new THREE.PerspectiveCamera(
 		PERSP_CAM_FOVY,
 		PERSP_CAM_AR,
 		PERSP_CAM_N,
 		PERSP_CAM_F);
 
-	perspcamera.position.set(PERSP_CAM_X, PERSP_CAM_Y, PERSP_CAM_Z);
-	perspcamera.lookAt(scene.position);
-	camera = perspcamera;
+	camPerspective.position.set(PERSP_CAM_X, PERSP_CAM_Y, PERSP_CAM_Z);
+	camPerspective.lookAt(scene.position);
 }
 
 function createClock() {
@@ -193,8 +189,10 @@ function animate() {
 	pause.toggleVisibility(flagVisibility);
 
 	// Display
-
-	render();
+	if (flagPaused)
+		render(camOrthographic);
+	else
+		render(camPerspective);
 
 	requestAnimationFrame(animate);
 }
@@ -202,6 +200,9 @@ function animate() {
 //------------------------------------------------------------------------------
 
 function init() {
+
+	console.log("Width:", window.innerWidth);
+	console.log("Height:", window.innerHeight);
 
 	createRenderer();
 	createScene();
@@ -217,7 +218,7 @@ function init() {
 	flagPaused        = false;
 	flagRefresh       = false;
 
-	render();
+	render(camPerspective);
 
 	window.addEventListener("keydown", onKeyDown);
 	window.addEventListener("resize",  onResize);
@@ -253,8 +254,6 @@ function onKeyDown(e) {
 		// Pause
 		case 's':
 		case 'S':
-			if (flagPaused) camera = perspcamera;
-			else camera = ortocamera;
 			flagPaused     = !flagPaused;
 			flagVisibility = !flagVisibility;
 			break;
@@ -271,8 +270,8 @@ function onResize() {
 
 	if (window.innerWidth > 0 && window.innerHeight > 0) {
 
-		camera.aspect = window.innerWidth / window.innerHeight;
-		camera.updateProjectionMatrix();
+		camPerspective.aspect = window.innerWidth / window.innerHeight;
+		camPerspective.updateProjectionMatrix();
 
 		scaleScene(width, window.innerWidth);
 	}
