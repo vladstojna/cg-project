@@ -111,7 +111,7 @@ function createScene() {
 
 function createControls() {
 	controls = new THREE.OrbitControls(camPerspective);
-	controls.rotateSpeed = 0.5;
+	controls.rotateSpeed = 0.25;
 	controls.autoRotate = true;
 }
 
@@ -184,8 +184,6 @@ function animate() {
 		
 		flagRefresh = !flagRefresh;
 	}
-	
-	pause.toggleVisibility(flagVisibility);
 
 	// Display
 	if (flagPaused) {

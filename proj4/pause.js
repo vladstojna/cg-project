@@ -9,29 +9,18 @@ class PauseMessage extends THREE.Object3D {
 
 		var tex;
 
-		this.visibilityFlag = true;
-
-		this.pausePlane = new THREE.Mesh(
+		this.add(new THREE.Mesh(
 			new THREE.PlaneGeometry(
 				width,
 				height,
 				widthSegments,
 				heightSegments),
 			material)
-
-		this.add(this.pausePlane);
+		);
 
 		tex = new THREE.TextureLoader().load(texture);
 		tex.anisotropy = 8;
-		this.pausePlane.material.map = tex;
-		
-		this.toggleVisibility(this.visibilityFlag);
-	}
-	
-	toggleVisibility(vFlag) {
-		if (this.visibilityFlag != vFlag) {
-			this.visible = vFlag;
-			this.visibilityFlag = vFlag;
-		}
+
+		material.map = tex;
 	}
 }
