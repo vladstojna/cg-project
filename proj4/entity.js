@@ -7,6 +7,7 @@ class GameEntity extends THREE.Object3D {
 
 		this.currentMaterial = shadedMaterial;
 		this.otherMaterial   = basicMaterial;
+		this.initialMaterial = shadedMaterial;
 
 		this.wireframeFlag     = false;
 		this.shaderComputeFlag = true;
@@ -39,5 +40,11 @@ class GameEntity extends THREE.Object3D {
 			});
 			this.shaderComputeFlag = shaderFlag;
 		}
+	}
+
+	/* resets entity wireframe rendering & shading compute */
+	resetEntity() {
+		this.toggleWireframe(false);
+		this.toggleShading(true);
 	}
 }
