@@ -19,7 +19,7 @@ class PauseMessage extends THREE.Object3D {
 		);
 
 		tex = new THREE.TextureLoader().load(texture);
-		tex.anisotropy = 8;
+		tex.anisotropy = ANISO_SAMPLES;
 
 		material.map = tex;
 	}
