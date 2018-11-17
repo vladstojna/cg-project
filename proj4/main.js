@@ -135,11 +135,6 @@ var CREATION = {
 	}
 };
 
-function scaleScene(scene, oldSize, newSize) {
-	var mult = newSize / oldSize;
-	scene.scale.set(mult, mult, mult);
-}
-
 function gameUpdate(delta, GAME, FLAGS) {
 	if (!FLAGS.Paused) {
 		GAME.ball.rotate(delta, FLAGS.BallDirection);
@@ -281,8 +276,7 @@ function init() {
 	});
 
 	window.addEventListener("resize", function() {
-		onResize(renderer, camPerspective, window.innerWidth, window.innerHeight);
-		scaleScene(gameScene, width, window.innerWidth);
+		onResize(renderer, camPerspective);
 	});
 }
 
@@ -326,11 +320,13 @@ function onKeyDown(e, FLAGS) {
 	}
 }
 
-function onResize(renderer, camera, newW, newH) {
-	renderer.setSize(newW, newH);
+function onResize(renderer, camera) {
+	renderer.setSize(window.innerWidth, window.innerHeight);
 
-	if (newW > 0 && newH > 0) {
-		camera.aspect = newW / newH;
+	if (window.innerWidth > 0 && window.innerHeight > 0 &&
+		camera instanceof THREE.PerspectiveCamera)
+	{
+		camera.aspect = window.innerWidth / window.innerHeight;
 		camera.updateProjectionMatrix();
 	}
 }
