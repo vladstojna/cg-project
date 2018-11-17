@@ -7,7 +7,6 @@ class GameEntity extends THREE.Object3D {
 
 		this.currentMaterial = shadedMaterial;
 		this.otherMaterial   = basicMaterial;
-		this.initialMaterial = shadedMaterial;
 
 		this.wireframeFlag     = false;
 		this.shaderComputeFlag = true;
