@@ -73,5 +73,7 @@ class RotatingBall extends GameEntity {
 
 		this.rotationVelocity = this.startingVelocity;
 		this.sphereMesh.position.z = this.rotationRadius;
+
+		this.resetEntity();
 	}
 }
