@@ -133,6 +133,8 @@ const DLIGHT_X = 500;
 const DLIGHT_Y = 500;
 const DLIGHT_Z = 500;
 
+const LIGHT_ON = true;
+
 /* Texture constants */
 /* --------------------------------------------------------------- */
 
