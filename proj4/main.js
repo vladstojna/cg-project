@@ -62,7 +62,8 @@ var CREATION = {
 			POINTLIGHT_DECAY,
 			POINTLIGHT_X,
 			POINTLIGHT_Y,
-			POINTLIGHT_Z
+			POINTLIGHT_Z,
+			LIGHT_ON
 		);
 		parent.add(plight);
 		return plight;
@@ -74,7 +75,8 @@ var CREATION = {
 			DLIGHT_INT,
 			DLIGHT_X,
 			DLIGHT_Y,
-			DLIGHT_Z
+			DLIGHT_Z,
+			LIGHT_ON
 		);
 		parent.add(dlight);
 		return dlight;
@@ -138,12 +140,7 @@ function scaleScene(scene, oldSize, newSize) {
 	scene.scale.set(mult, mult, mult);
 }
 
-//------------------------------------------------------------------------------
-
-function animate(renderer, clock, GAME, FLAGS) {
-	// Update
-	var delta = clock.getDelta();
-
+function gameUpdate(delta, GAME, FLAGS) {
 	if (!FLAGS.Paused) {
 		GAME.ball.rotate(delta, FLAGS.BallDirection);
 
@@ -160,30 +157,54 @@ function animate(renderer, clock, GAME, FLAGS) {
 
 		GAME.orbitControls.update();
 	}
+}
 
+function gameRefresh(GAME, FLAGS, ORIG) {
 	if (FLAGS.Refresh) {
 		GAME.orbitControls.reset();
+
 		GAME.ball.resetState();
+		GAME.cube.resetEntity();
+		GAME.board.resetEntity();
 
-		FLAGS.BallDirection = -1;
-		FLAGS.Refresh = !FLAGS.Paused;
+		GAME.plight.resetState();
+		GAME.dlight.resetState();
+
+		for (let f in FLAGS)
+			FLAGS[f] = ORIG[f];
 	}
+}
 
-	// Display
-	if (FLAGS.Paused) {
+function gameRenderPause(flag, renderer, scene, camera) {
+	if (flag) {
 		renderer.setViewport(
 			window.innerWidth/2 - PAUSE_WIDTH/2,
 			PAUSE_HEIGHT/2,
 			PAUSE_WIDTH,
 			PAUSE_HEIGHT);
-		renderer.render(GAME.pauseScene, GAME.camOrthographic);
+		renderer.render(scene, camera);
 	}
+}
+
+function gameRender(renderer, scene, camera) {
 	renderer.setViewport(0, 0, window.innerWidth, window.innerHeight);
-	renderer.render(GAME.gameScene, GAME.camPerspective);
+	renderer.render(scene, camera);
+}
+
+//------------------------------------------------------------------------------
+
+function animate(renderer, clock, GAME, FLAGS, ORIG) {
+	// Update
+	gameUpdate(clock.getDelta(), GAME, FLAGS);
+	gameRefresh(GAME, FLAGS, ORIG);
+
+	// Display
+	gameRenderPause(FLAGS.Paused, renderer, GAME.pauseScene, GAME.camOrthographic);
+	gameRender(renderer, GAME.gameScene, GAME.camPerspective)
 
 	// Prepares next frame
 	requestAnimationFrame(function() {
-		animate(renderer, clock, GAME, FLAGS)
+		animate(renderer, clock, GAME, FLAGS, ORIG)
 	});
 }
 
@@ -245,10 +266,13 @@ function init() {
 		PointLight    : true
 	};
 
+	// Create deep copy of original flags
+	var ORIG = JSON.parse(JSON.stringify(FLAGS));
+
 	// Start game
 
 	renderer.render(gameScene, camPerspective);
-	animate(renderer, clock, GAME, FLAGS);
+	animate(renderer, clock, GAME, FLAGS, ORIG);
 
 	// Event listeners
 
