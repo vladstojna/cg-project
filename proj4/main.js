@@ -277,6 +277,7 @@ function init() {
 
 	window.addEventListener("resize", function() {
 		onResize(renderer, camPerspective);
+		onResizePause(renderer, camOrthographic, height);
 	});
 }
 
@@ -327,6 +328,20 @@ function onResize(renderer, camera) {
 		camera instanceof THREE.PerspectiveCamera)
 	{
 		camera.aspect = window.innerWidth / window.innerHeight;
+		camera.updateProjectionMatrix();
+	}
+}
+
+function onResizePause(renderer, camera, oldHeight) {
+	renderer.setSize(window.innerWidth, window.innerHeight);
+
+	if (window.innerWidth > 0 && window.innerHeight > 0 &&
+		camera instanceof THREE.OrthographicCamera)
+	{
+		camera.left   = ORTO_CAM_L * oldHeight/window.innerHeight;
+		camera.right  = ORTO_CAM_R * oldHeight/window.innerHeight;
+		camera.top    = ORTO_CAM_T * oldHeight/window.innerHeight;
+		camera.bottom = ORTO_CAM_B * oldHeight/window.innerHeight;
 		camera.updateProjectionMatrix();
 	}
 }
