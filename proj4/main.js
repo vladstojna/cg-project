@@ -136,49 +136,44 @@ var CREATION = {
 };
 
 function gameUpdate(delta, GAME, FLAGS) {
-	if (!FLAGS.Paused) {
-		GAME.ball.rotate(delta, FLAGS.BallDirection);
+	GAME.ball.rotate(delta, FLAGS.BallDirection);
 
-		GAME.ball.toggleWireframe(FLAGS.Wireframe);
-		GAME.cube.toggleWireframe(FLAGS.Wireframe);
-		GAME.board.toggleWireframe(FLAGS.Wireframe);
+	GAME.ball.toggleWireframe(FLAGS.Wireframe);
+	GAME.cube.toggleWireframe(FLAGS.Wireframe);
+	GAME.board.toggleWireframe(FLAGS.Wireframe);
 
-		GAME.ball.toggleShading(FLAGS.ShaderCompute);
-		GAME.cube.toggleShading(FLAGS.ShaderCompute);
-		GAME.board.toggleShading(FLAGS.ShaderCompute);
+	GAME.ball.toggleShading(FLAGS.ShaderCompute);
+	GAME.cube.toggleShading(FLAGS.ShaderCompute);
+	GAME.board.toggleShading(FLAGS.ShaderCompute);
 
-		GAME.dlight.switchLight(FLAGS.DirecLight);
-		GAME.plight.switchLight(FLAGS.PointLight);
+	GAME.dlight.switchLight(FLAGS.DirecLight);
+	GAME.plight.switchLight(FLAGS.PointLight);
 
-		GAME.orbitControls.update();
-	}
+	GAME.orbitControls.update();
 }
 
 function gameRefresh(GAME, FLAGS, ORIG) {
-	if (FLAGS.Refresh) {
-		GAME.orbitControls.reset();
+	GAME.orbitControls.reset();
 
-		GAME.ball.resetState();
-		GAME.cube.resetEntity();
-		GAME.board.resetEntity();
+	GAME.ball.resetState();
+	GAME.cube.resetEntity();
+	GAME.board.resetEntity();
 
-		GAME.plight.resetState();
-		GAME.dlight.resetState();
+	GAME.plight.resetState();
+	GAME.dlight.resetState();
 
-		for (let f in FLAGS)
-			FLAGS[f] = ORIG[f];
-	}
+	// Resets flags to their original values
+	for (let f in FLAGS)
+		FLAGS[f] = ORIG[f];
 }
 
-function gameRenderPause(flag, renderer, scene, camera) {
-	if (flag) {
-		renderer.setViewport(
-			window.innerWidth/2 - PAUSE_WIDTH/2,
-			PAUSE_HEIGHT/2,
-			PAUSE_WIDTH,
-			PAUSE_HEIGHT);
-		renderer.render(scene, camera);
-	}
+function gameRenderPause(renderer, scene, camera) {
+	renderer.setViewport(
+		window.innerWidth/2 - PAUSE_WIDTH/2,
+		PAUSE_HEIGHT/2,
+		PAUSE_WIDTH,
+		PAUSE_HEIGHT);
+	renderer.render(scene, camera);
 }
 
 function gameRender(renderer, scene, camera) {
@@ -189,12 +184,18 @@ function gameRender(renderer, scene, camera) {
 //------------------------------------------------------------------------------
 
 function animate(renderer, clock, GAME, FLAGS, ORIG) {
+	// Gets frametime
+	var frametime = clock.getDelta();
+
 	// Update
-	gameUpdate(clock.getDelta(), GAME, FLAGS);
-	gameRefresh(GAME, FLAGS, ORIG);
+	if (!FLAGS.Paused)
+		gameUpdate(frametime, GAME, FLAGS);
+	if (FLAGS.Refresh)
+		gameRefresh(GAME, FLAGS, ORIG);
 
 	// Display
-	gameRenderPause(FLAGS.Paused, renderer, GAME.pauseScene, GAME.camOrthographic);
+	if (FLAGS.Paused)
+		gameRenderPause(renderer, GAME.pauseScene, GAME.camOrthographic);
 	gameRender(renderer, GAME.gameScene, GAME.camPerspective)
 
 	// Prepares next frame
